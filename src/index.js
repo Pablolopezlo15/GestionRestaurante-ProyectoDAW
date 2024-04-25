@@ -8,11 +8,12 @@ import reportWebVitals from './reportWebVitals';
 import {
   createBrowserRouter,
   RouterProvider,
-  Route,
-  Link,
+  // Route,
+  // Link,
 } from "react-router-dom";
 
 import InicioSesion from './Components/InicioSesion';
+import Carta from './Components/Carta';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "login",
     element: <InicioSesion/>,
+  },
+  {
+    path: "carta",
+    element: <Carta/>,
   },
 ]);
 

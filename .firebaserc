@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "gestion-restaurante-74d36"
-  }
+    "default": "gestion--restaurante",
+    "GestionRestaurante": "gestion--restaurante"
+  },
+  "targets": {},
+  "etags": {}
 }

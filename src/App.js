@@ -1,6 +1,11 @@
 import React from 'react';
 import './assets/css/index.css';
-
+import {
+    createBrowserRouter,
+    RouterProvider,
+    Route,
+    Link,
+  } from "react-router-dom";
 
 
 function App() {
@@ -11,6 +16,7 @@ function App() {
             <header className="App-header">
                 <h1>Gestión de Restaurante</h1>
                 <p>Bienvenido {nombre}</p>
+                <Link to="/login">Inicio de Sesión</Link>
             </header>
         </div>
     );
