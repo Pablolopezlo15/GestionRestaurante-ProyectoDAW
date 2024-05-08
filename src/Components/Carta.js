@@ -21,7 +21,7 @@ function Carta() {
         <>
             <div className="container">
                 <div>
-                    <div className="col-md-12">
+                    <div>
                         <h1>Carta</h1>
                         <p>En esta sección se mostrará la carta del restaurante</p>
                         {/* <Link to="/">Volver al Inicio</Link>
@@ -44,7 +44,7 @@ function Carta() {
                     }
                 </div>
 
-                </div>
+            </div>
         </>
     );
 }

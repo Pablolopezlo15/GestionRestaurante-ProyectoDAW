@@ -9,14 +9,11 @@ import {
 
 
 function App() {
-    let nombre = ["Juan", "Pedro", "Maria"];
-    nombre = nombre[Math.floor(Math.random() * nombre.length)];
     return (
         <div className="App">
             <header className="App-header">
                 <h1>Gestión de Restaurante</h1>
-                <p>Bienvenido {nombre}</p>
-                <Link to="/login">Inicio de Sesión</Link>
+                <h2>Página Principal</h2>
             </header>
         </div>
     );
