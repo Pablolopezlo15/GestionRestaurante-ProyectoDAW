@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { getFirestore, collection, getDocs, updateDoc, doc, onSnapshot } from 'firebase/firestore';
-
+import { getFirestore, collection, getDocs, updateDoc, doc, onSnapshot, addDoc, getDoc, deleteDoc } from 'firebase/firestore';
+import CrearComanda from './CrearComanda';
 
 function Mesas() {
+    const [mesaActual, setMesaActual] = useState(null);
     const [mesas, setMesas] = useState([]);
+    const [carta, setCarta] = useState([{}]);
     const db = getFirestore();
 
+
+    
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'mesas'), (snapshot) => {
             setMesas(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
@@ -17,16 +21,38 @@ function Mesas() {
     function abrirMesa(id) {
         console.log('Mesa abierta');
         
-        updateDoc(doc(db, 'mesas', id), { estado: 'ocupada' });
+        updateDoc(doc(db, 'mesas', id), { estado: 'ocupada', horaapertura: new Date().toLocaleTimeString()});
     }
 
-    function cerrarMesa(id) {
-        console.log('Mesa cerrada');
-        updateDoc(doc(db, 'mesas', id), { estado: 'libre' });
+    async function cerrarMesa(id) {
+        const mesaRef = doc(db, 'mesas', id);
+        const mesaSnap = await getDoc(mesaRef);
+        const mesaData = mesaSnap.data();
+    
+        const comandasRef = collection(db, 'mesas', id, 'comandas');
+        const comandasSnap = await getDocs(comandasRef);
+    
+        // Crear una nueva mesa en registroMesas
+        const registroMesaRef = await addDoc(collection(db, 'registroMesas'), {
+            ...mesaData,
+            horacierre: new Date().toLocaleTimeString()
+        });
+    
+        for (const doc of comandasSnap.docs) {
+            const comandaData = doc.data();
+            await addDoc(collection(db, 'registroMesas', registroMesaRef.id, 'comandas'), comandaData);
+        }
+    
+        for (const doc of comandasSnap.docs) {
+            await deleteDoc(doc.ref);
+        }
+    
+        updateDoc(doc(db, 'mesas', id), { estado: 'libre', horacierre: new Date().toLocaleTimeString()});
     }
 
-    function crearComanda() {
+    function crearComanda(id) {
         console.log('Comanda creada');
+        setMesaActual(id);
     }
 
     return (
@@ -39,13 +65,21 @@ function Mesas() {
                         <h2>Mesa {mesa.numero}</h2>
                         <p>Capacidad: {mesa.capacidad}</p>
                         <p>Estado: {mesa.estado}</p>
-                        <p>Hora de apertura: {}</p>
-                        { mesa.estado == 'ocupada' && 
-                            <button onClick={() => cerrarMesa(mesa.id)}>Cerrar Mesa</button> }
-                        { mesa.estado == 'libre' &&
-                            <button onClick={() => abrirMesa(mesa.id)}>Abrir Mesa</button> }                      
-                        <button onClick={crearComanda}>Crear Comanda</button>
-                    </div>
+                        { mesa.estado === 'ocupada' && 
+                            <>
+                                <p>Hora de apertura: {mesa.horaapertura}</p>
+                                <button onClick={() => cerrarMesa(mesa.id)}>Cerrar Mesa</button>
+                                <button onClick={() => crearComanda(mesa.id)}>Crear Comanda</button>
+                                {mesaActual === mesa.id && <CrearComanda idMesa={mesaActual} />}
+                            </>
+                             }
+                        { mesa.estado === 'libre' &&
+                        <>
+                            <p>Cerrada desde: {mesa.horacierre}</p>
+                            <button onClick={() => abrirMesa(mesa.id)}>Abrir Mesa</button> 
+                        </>
+                        }                   
+                        </div>
                 ))}
             </div>
         </>
