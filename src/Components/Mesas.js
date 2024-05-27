@@ -55,6 +55,10 @@ function Mesas() {
         setMesaActual(id);
     }
 
+    function calcularCuenta() {
+        console.log('Cuenta calculada');
+    }
+
     return (
         <>
             <div>
@@ -67,16 +71,19 @@ function Mesas() {
                         <p>Estado: {mesa.estado}</p>
                         { mesa.estado === 'ocupada' && 
                             <>
+                                <p>Comandas pendientes: {mesa.comandas}</p>
                                 <p>Hora de apertura: {mesa.horaapertura}</p>
-                                <button onClick={() => cerrarMesa(mesa.id)}>Cerrar Mesa</button>
-                                <button onClick={() => crearComanda(mesa.id)}>Crear Comanda</button>
-                                {mesaActual === mesa.id && <CrearComanda idMesa={mesaActual} />}
+                                <button type="button" class="btn btn-outline-danger" onClick={() => cerrarMesa(mesa.id)}>Cerrar Mesa</button>
+                                <button type="button" class="btn btn-outline-primary" onClick={() => crearComanda(mesa.id)}>Nueva comanda</button>
+
+                                {mesaActual === mesa.id && <CrearComanda idMesa={mesaActual} numeroMesa={mesa.numero} />}
+                                {/* <button onClick={() => calcularCuenta()}>Calcular Cuenta</button> */}
                             </>
-                             }
+                            }
                         { mesa.estado === 'libre' &&
                         <>
                             <p>Cerrada desde: {mesa.horacierre}</p>
-                            <button onClick={() => abrirMesa(mesa.id)}>Abrir Mesa</button> 
+                            <button type="button" class="btn btn-outline-success" onClick={() => abrirMesa(mesa.id)}>Abrir Mesa</button>
                         </>
                         }                   
                         </div>

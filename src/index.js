@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.bundle';
 import './assets/css/index.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
@@ -18,6 +20,7 @@ import InicioSesion from './Components/InicioSesion';
 import Registro from './Components/Registro'
 import Carta from './Components/Carta';
 import Mesas from './Components/Mesas';
+import Comanda from './Components/Comanda';
 
 import PrivateRoute from './Components/PrivateRoute';
 
@@ -46,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: "carta",
         element: <Carta/>,
+      },
+      {
+        path: "comanda",
+        element: <PrivateRoute Component={Comanda}/>,
       },
       {
         path: "mesas",
