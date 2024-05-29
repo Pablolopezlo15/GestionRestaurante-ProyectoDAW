@@ -2,10 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { getFirestore, collection, getDocs, updateDoc, doc, onSnapshot, addDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import CrearComanda from './CrearComanda';
 
+import PDF from './PDF';
+import { PDFDownloadLink, PDFViewer  } from '@react-pdf/renderer';
+
 function Mesas() {
     const [mesaActual, setMesaActual] = useState(null);
     const [mesas, setMesas] = useState([]);
     const [carta, setCarta] = useState([{}]);
+    const [mostrarComanda, setMostrarComanda] = useState(false);
+    const [pdfDocument, setPdfDocument] = useState(null);
     const db = getFirestore();
 
 
@@ -53,9 +58,16 @@ function Mesas() {
     function crearComanda(id) {
         console.log('Comanda creada');
         setMesaActual(id);
+        setMostrarComanda(true);
+
     }
 
-    function calcularCuenta() {
+    function ocultarComanda() {
+        setMostrarComanda(false);
+    }
+
+    function calcularCuenta(mesa, horaApertura) {
+        setPdfDocument(<PDF mesa={mesa} horaApertura={horaApertura} />);
         console.log('Cuenta calculada');
     }
 
@@ -76,8 +88,24 @@ function Mesas() {
                                 <button type="button" class="btn btn-outline-danger" onClick={() => cerrarMesa(mesa.id)}>Cerrar Mesa</button>
                                 <button type="button" class="btn btn-outline-primary" onClick={() => crearComanda(mesa.id)}>Nueva comanda</button>
 
-                                {mesaActual === mesa.id && <CrearComanda idMesa={mesaActual} numeroMesa={mesa.numero} />}
-                                {/* <button onClick={() => calcularCuenta()}>Calcular Cuenta</button> */}
+                                {mesaActual === mesa.id && mostrarComanda && 
+                                    <div>
+                                        <button type="button" class="btn btn-outline-secondary" onClick={ocultarComanda}>Ocultar Comanda</button>
+                                        <CrearComanda idMesa={mesaActual} numeroMesa={mesa.numero} />
+                                    </div>
+
+                                }
+                                <button onClick={() => calcularCuenta(mesaActual, mesa.horaapertura)}>Calcular Cuenta</button>
+                                {pdfDocument && (
+                                    <>
+                                        {/* <PDFDownloadLink document={pdfDocument} fileName="cuenta.pdf">
+                                          {({ loading }) => (loading ? 'Cargando documento...' : 'Descargar cuenta')}
+                                        </PDFDownloadLink> */}
+                                        <PDFViewer>
+                                          {pdfDocument}
+                                        </PDFViewer>
+                                    </>
+                                )}
                             </>
                             }
                         { mesa.estado === 'libre' &&

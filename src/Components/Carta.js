@@ -35,7 +35,7 @@ function Carta() {
                     </div>
                 </div>
 
-                <div className="section">
+                {/* <div className="section">
                     {
                         carta.map((item) => {
                             return (
@@ -48,9 +48,9 @@ function Carta() {
                             );
                         })
                     }
-                </div>
+                </div> */}
 
-                <div className="accordion" id="accordionExample">
+                <div className="accordion carta" id="accordionExample">
                     {
                         carta.map((item, index) => (
                             <div className="accordion-item" key={item.id}>
@@ -62,11 +62,15 @@ function Carta() {
                                 <div id={`collapse${index}`} className="accordion-collapse collapse" aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
                                     <div className="accordion-body">
                                         {item.productos && item.productos.map(producto => (
-                                            <div key={producto.id}>
-                                                <h2>{producto.nombre}</h2>
-                                                <img src={producto.imagen} alt={producto.nombre} />
-                                                <p><strong>Precio: </strong>{producto.precio} €</p>
-                                                <p><strong>Ingredientes: </strong>{producto.ingredientes}</p>
+                                            <div key={producto.id} className="producto">
+                                                <div className="producto__imagen">
+                                                    <img src={producto.imagen} alt={producto.nombre} />
+                                                </div>
+                                                <div className="producto__info">
+                                                    <h2>{producto.nombre}</h2>
+                                                    <p><strong>Precio: </strong>{producto.precio} €</p>
+                                                    <p><strong>Ingredientes: </strong>{producto.ingredientes}</p>
+                                                </div>                                                
                                             </div>
                                         ))}
                                     </div>

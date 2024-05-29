@@ -1,18 +1,41 @@
 
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { getAuth, signOut, onAuthStateChanged  } from 'firebase/auth';
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 
 function Cabecera() {
     const [user, setUser] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+
     const auth = getAuth();
+    const db = getFirestore();
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             setUser(user);
     });
     }, []);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                comprobarRol(user);
+            }
+        });
+
+        return () => unsubscribe();
+    }, [auth]);
+
+    async function comprobarRol(user) {
+        const usersSnapshot = await getDocs(collection(db, "users"));
+        usersSnapshot.forEach((doc) => {
+            if (doc.data().uid === user.uid && doc.data().rol === 'admin') {
+                setIsAdmin(true);
+            }
+        });
+    }
 
     let userName = null;
     console.log(auth.currentUser);
@@ -52,9 +75,9 @@ function Cabecera() {
             </header> */}
 
             <header>
-                <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                <nav className="navbar navbar-expand-lg bg-body-tertiary">
                   <div class="container-fluid">
-                    <a class="navbar-brand" href="#"><Link to="/">Inicio</Link></a>
+                    <a class="navbar-brand" href="#"><Link to="/">LOGO</Link></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                       <span class="navbar-toggler-icon"></span>
                     </button>
@@ -70,17 +93,10 @@ function Cabecera() {
                           <a class="nav-link" href="#"><Link to="/comanda">Comandas</Link></a>
                         </li>
                         { !user && 
-                        <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          <Link to="/login">Inicia Sesión</Link> 
-                          </a>
-                          
-                          <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                          </ul>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><Link to="/login">Inicia Sesión</Link></a>
+                            </li>
+                        
                         }
                         { user && 
                         <li class="nav-item dropdown">
@@ -89,9 +105,13 @@ function Cabecera() {
                           </a>
                           
                           <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+                          {isAdmin && (
+                            <>
+                                <li><a class="dropdown-item" href="#">Gestionar Usuarios</a></li>
+                                <li><a class="dropdown-item" href="#">Gestionar Carta</a></li>
+                            </>
+                          )}
+                            <li><a class="dropdown-item" href="#" onClick={logout}>Cerrar Sesión</a></li>
                           </ul>
                         </li>
                         }
