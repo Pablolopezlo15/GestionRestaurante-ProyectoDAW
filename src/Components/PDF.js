@@ -11,25 +11,40 @@ const styles = StyleSheet.create({
         padding: 10,
         flexGrow: 1
     },
-    image: {
+    imagediv: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',  
         width: '100px',
-        height: '100px'
+        height: '100px'  
+    },
+    image: {
+        width: '100%',
+        height: '100%'
     },
     title: {
-        fontSize: 24,
+        fontSize: 14,
         textAlign: 'center'
+    },
+    text: {
+        fontSize: 10,
     }
 });
 
 function PDF({ mesa, horaApertura }) {
     return (
         <Document>
-            <Page size="A4" style={styles.page}>
+            <Page size={[57 * 2.83465, 'auto']} style={styles.page}>
+                {/* <Page size="A4" style={styles.page}> */}
                 <View style={styles.section}>
-                    <Image style={styles.image} src={PLlogo} />
+                    <View style={styles.imagediv}>
+                        <Image style={styles.image} src={PLlogo} />
+                    </View>
+                    <Text style={styles.text}>Mesa: {mesa}</Text>
+                    <Text style={styles.text}>Hora de apertura: {horaApertura}</Text>
                     <Text style={styles.title}>Cuenta</Text>
-                    <Text>Mesa: {mesa}</Text>
-                    <Text>Hora de apertura: {horaApertura}</Text>
+
                 </View>
             </Page>
         </Document>
