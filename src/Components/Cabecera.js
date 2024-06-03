@@ -87,17 +87,17 @@ function Cabecera() {
                         <div class="collapse navbar-collapse" id="navbarNavDropdown">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#"><Link to="/carta">Carta</Link></a>
+                                    <Link class="nav-link" to="/carta">Carta</Link>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#"><Link to="/mesas">Mesas</Link></a>
+                                    <Link class="nav-link" to="/mesas">Mesas</Link>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#"><Link to="/comanda">Comandas</Link></a>
+                                    <Link class="nav-link" to="/comanda">Comandas</Link>
                                 </li>
                                 { !user && 
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#"><Link to="/login">Inicia Sesión</Link></a>
+                                        <Link class="nav-link" to="/login">Inicia Sesión</Link>
                                     </li>
                                 }
                                 { user && 
