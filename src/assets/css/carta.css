@@ -1,5 +1,3 @@
-@import url('./variables.css');
-
 .carta{
     display: flex;
     flex-direction: column;
@@ -8,12 +6,22 @@
 }
 .accordion-button{
     background-color: var(--color-primary);
-    color: #000;
+    color: var(--color-text-secondary);
     height: 40px;
     border-radius: 20px 20px 20px 20px;
     margin-top: 5px;
 }
+.accordion-button:not(.collapsed){
+    background-color: var(--color-primary);
+    box-shadow: #ffffff 0px 0px 3px 0px;
+    color: var(--color-text-secondary);
 
+}
+.accordion-button.collapsed{
+    background-color: var(--color-primary);
+    color: var(--color-text-secondary);
+
+}
 .accordion-item{
     background-color: var(--color-background);
     border: none;
@@ -28,7 +36,7 @@
 
 .producto{
     display: flex;
-    /* justify-content: space-between; */
+    align-items: center;
     gap: 2vw;
     margin: 5px 0;
     border-radius: 10px;
@@ -37,8 +45,20 @@
     background-color: bisque;
 }
 
+@media screen and (max-width: 500px) {
+    .producto{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2vw;
+    }
+
+    
+}
+
 .producto__imagen{
     width: 20vw;
+    min-width: 200px;
 }
 .producto__imagen img{
     width: 100%;
@@ -51,5 +71,28 @@
     display: flex;
     flex-direction: column;
     gap: 1vw;
+    max-width: 350px;
     width: 100%;
 }
+
+.btns-crear{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.btns-crear button{
+    color: var(--color-text-secondary);
+    border: 2px solid var(--color-primary);
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.btns-crear button:hover{
+    background-color: var(--color-primary);
+    color: var(--color-text-secondary);
+    border: 2px solid var(--color-primary);
+
+}
+

@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Teachers:ital,wght@0,400..800;1,400..800&display=swap');
+/* Variables */
+:root {
+    --color-primary: #AD6903;
+    --color-secondary: #cf9f58;
+    --color-tertiary: #F2EFE4;
+    --color-text: #000;
+    --color-text-secondary: #ffffff;
+
+    --color-background: #1E1E1E;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Teachers', cursive;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--color-background);
+    color: white; 
+}
+  

@@ -5,7 +5,7 @@ import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 
-import '../assets/css/cabecera.css';
+// import '../assets/css/cabecera.css';
 import GestionarCarta from './GestionarCarta';
 
 function Cabecera() {
@@ -60,23 +60,6 @@ function Cabecera() {
 
     return (
         <>
-            {/* <header style={{display: 'flex', justifyContent: 'space-between'}}>   
-                <nav style={{display: 'flex', alignItems: 'center', gap: '2rem'}}>
-                    <Link to="/">Inicio</Link>
-                    <Link to="/carta">Carta</Link>
-                    <Link to="/mesas">Mesas</Link>
-                    <Link to="/comanda">Comandas</Link>
-                </nav>
-                { !user && <Link to="/login">Inicia Sesión</Link> }
-                { user && 
-                    <>
-                        <p>Bienvenido, {user.email}</p>
-                        <button onClick={logout}>Cerrar sesión</button> 
-                    </>
-                }
-
-            </header> */}
-
             <header>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary">
                     <div class="container-fluid">
@@ -86,22 +69,23 @@ function Cabecera() {
                     </button>
                         <div class="collapse navbar-collapse" id="navbarNavDropdown">
                             <ul class="navbar-nav">
-                                <li class="nav-item">
+                                <li class="nav-item btn-cabecera">
                                     <Link class="nav-link" to="/carta">Carta</Link>
                                 </li>
-                                <li class="nav-item">
-                                    <Link class="nav-link" to="/mesas">Mesas</Link>
-                                </li>
-                                <li class="nav-item">
-                                    <Link class="nav-link" to="/comanda">Comandas</Link>
-                                </li>
                                 { !user && 
-                                    <li class="nav-item">
+                                    <li class="nav-item btn-cabecera">
                                         <Link class="nav-link" to="/login">Inicia Sesión</Link>
                                     </li>
                                 }
                                 { user && 
-                                    <li class="nav-item dropdown">
+                                <>
+                                    <li class="nav-item btn-cabecera">
+                                        <Link class="nav-link" to="/mesas">Mesas</Link>
+                                    </li>
+                                    <li class="nav-item btn-cabecera">
+                                        <Link class="nav-link" to="/comanda">Comandas</Link>
+                                    </li>
+                                    <li class="nav-item dropdown btn-cabecera">
                                         <a class="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">Bienvenido, {user.email}</a>
                                             <ul class="dropdown-menu">
                                             {isAdmin && (
@@ -113,6 +97,7 @@ function Cabecera() {
                                                 <li><a class="dropdown-item" href="#" onClick={logout}>Cerrar Sesión</a></li>
                                             </ul>
                                     </li>
+                                    </>
                                 }
                             </ul>
                         </div>

@@ -29,26 +29,10 @@ function Carta() {
         <>
             <div className="container">
                 <div>
-                    <div>
+                    <div className="d-flex justify-content-center flex-column align-items-center mt-4">
                         <h1>Carta</h1>
-                        <p>En esta sección se mostrará la carta del restaurante</p>
                     </div>
                 </div>
-
-                {/* <div className="section">
-                    {
-                        carta.map((item) => {
-                            return (
-                                <div className="card" key={item.nombre}>
-                                    <img src={item.imagen} alt={item.nombre} />
-                                    <h3>{item.nombre}</h3>
-                                    <p><strong>Precio: </strong>{item.precio} €</p>
-                                    <p><strong>Ingredientes: </strong>{item.ingredientes}</p>
-                                </div>
-                            );
-                        })
-                    }
-                </div> */}
 
                 <div className="accordion carta" id="accordionExample">
                     {
@@ -69,7 +53,8 @@ function Carta() {
                                                 <div className="producto__info">
                                                     <h2>{producto.nombre}</h2>
                                                     <p><strong>Precio: </strong>{producto.precio} €</p>
-                                                    <p><strong>Ingredientes: </strong>{producto.ingredientes}</p>
+                                                    {producto.ingredientes !== '' && <p><strong>Ingredientes: </strong>{producto.ingredientes}</p>}
+                                                    
                                                 </div>                                                
                                             </div>
                                         ))}

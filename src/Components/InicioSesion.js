@@ -23,46 +23,11 @@ const InicioSesion = () => {
             setUser(currentUser);
         });
 
-        // Cleanup subscription on unmount
         return () => unsubscribe();
     }, [auth]);
 
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  // function registrarse(e) {
-  //   e.preventDefault();
-  //   createUserWithEmailAndPassword(auth, email, password)
-  //       .then((userCredential) => {
-  //           console.log("Registrado");
-  //           const user = userCredential.user;
-  //           user.displayName = name;
-  //           updateProfile(user, {
-  //             displayName: name,
-  //           }).then(() => {
-
-  //             const db = getFirestore(app);
-  //             setDoc(doc(db, "users", user.uid), {
-  //               rol: "user",
-  //               email: user.email,
-  //               name: name,
-  //             });
-
-  //             navigate("/");
-
-  //           }).catch((error) => {
-  //             // Ocurrió un error
-  //             console.log(error);
-  //           });
-  //       })
-  //       .catch((error) => {
-  //           const errorCode = error.code;
-  //           const errorMessage = error.message;
-  //           console.log(errorCode);
-  //           if (errorCode === 'auth/email-already-in-use') {
-  //             seterrorPorCorreoExisitente('Ya existe un usuario con la misma dirección de correo electrónico.');
-  //           }
-  //       });
-  // }
 
 
     function iniciarSesionEmail(e) {

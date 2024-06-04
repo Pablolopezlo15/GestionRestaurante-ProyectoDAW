@@ -1,8 +1,48 @@
-
-
-
 .img-logo{
     width: 64px;
     height: 64px;
     margin: 0 auto;
+}
+
+#navbarNavDropdown{
+    justify-content: flex-end;
+}
+
+.dropdown-item:hover{
+    background-color: var(--color-primary);
+    color: var(--color-text-secondary);
+}
+.btn-cabecera {
+    font-size: 18px;
+    color: var(--color-primary);
+    cursor: pointer;
+    position: relative;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: color;
+}
+  
+.btn-cabecera:focus,
+.btn-cabecera:hover {
+    color: var(--color-primary);
+}
+  
+.btn-cabecera:focus:after,
+.btn-cabecera:hover:after {
+    width: 100%;
+    left: 0%;
+}
+  
+.btn-cabecera:after {
+    content: "";
+    pointer-events: none;
+    bottom: -2px;
+    left: 50%;
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background-color: var(--color-primary);
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: width, left;
 }
