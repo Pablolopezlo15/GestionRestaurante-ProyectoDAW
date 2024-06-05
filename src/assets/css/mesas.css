@@ -1,0 +1,32 @@
+.contenedor-principal{
+    width: 95%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2vw;   
+}
+
+.producto-comanda{
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+    margin: 5px 0;
+    border-radius: 10px;
+    padding: 10px;
+    min-height: 10vw;
+    background-color: bisque;
+}
+
+@media screen and (max-width: 500px) {
+    .producto-comanda{
+        justify-content: center;
+        align-items: center;
+        gap: 2vw;
+    }
+    
+}
+
+.primary{
+    background-color: var(--color-primary);
+    color: var(--color-text-secondary);
+}

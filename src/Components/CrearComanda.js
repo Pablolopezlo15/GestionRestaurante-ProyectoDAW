@@ -2,19 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { getFirestore ,collection, getDocs, addDoc } from 'firebase/firestore';
 import app from '../firebase';
 
+
 function CrearComanda({ idMesa, numeroMesa }) {
     const [comanda, setComanda] = useState([]);
     const [carta, setCarta] = useState([]);
+    const [mostrarCarta, setMostrarCarta] = useState(true);
     const db = getFirestore();
 
-    // useEffect(() => {
-    //     const obtenerCarta = async () => {
-    //         const snapshot = await getDocs(collection(db, 'carta'));
-    //         setCarta(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-    //     };
 
-    //     obtenerCarta();
-    // }, []);
 
     useEffect(() => {
         const obtenerCarta = async () => {
@@ -66,50 +61,54 @@ function CrearComanda({ idMesa, numeroMesa }) {
         await addDoc(collection(db, 'mesas', idMesa, 'comandas'), { idComanda: comandaRef.id });
 
         setComanda([]);
+        setMostrarCarta(false);
         console.log('Comanda enviada');
     }
 
     return (
         <div>
-            <h2>Comanda</h2>
-            {/* {carta.map((producto, index) => (
-                <div key={index} className='d-flex w-50'>
-                    <p>{producto.nombre}</p>
-                    <p>{producto.precio}€</p>
-                    <div>
-                        <img src={producto.imagen} alt={producto.nombre} className='w-25'/>
-                    </div>
-                    <button onClick={() => agregarProducto(producto)}>Agregar a la comanda</button>
-                </div>
-            ))} */}
-            {carta.map((item, index) => (
-                <div key={index}>
-                    <h2>{item.categoria}</h2>
-                    {item.productos && item.productos.map(producto => (
-                        <div key={producto.id} className='d-flex w-50'>
-                            <p>{producto.nombre}</p>
-                            <p>{producto.precio}€</p>
-                            <div>
-                                <img src={producto.imagen} alt={producto.nombre} className='w-25'/>
+            {mostrarCarta && (
+            <>
+                <h2>Elige los productos</h2>
+
+                <div className="accordion carta" id="accordionExample">
+                    {carta.map((item, index) => (
+                        <div className="accordion-item" key={index}>
+                            <h2 className="accordion-header" id={`heading${index}`}>
+                                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${index}`} aria-expanded="true" aria-controls={`collapse${index}`}>
+                                    {item.categoria}
+                                </button>
+                            </h2>
+                            <div id={`collapse${index}`} className="accordion-collapse collapse" aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
+                                <div className="accordion-body">
+                                    {item.productos && item.productos.map(producto => (
+                                        <div key={producto.id}   className='producto-comanda d-flex justify-content-between'>
+                                            <p>{producto.nombre}</p>
+                                            <p>{producto.precio}€</p>
+                                            <button type='button' class="btn primary" onClick={() => agregarProducto(producto)}>Agregar a la comanda</button>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                            <button onClick={() => agregarProducto(producto)}>Agregar a la comanda</button>
                         </div>
                     ))}
                 </div>
-            ))}
+            </>
+            )}
+
             <h2>Productos en la comanda:</h2>
             {comanda.map((producto, index) => (
-                <div key={index}>
+                <div key={index} className='d-flex  align-items-center gap-2'>
                     <p>{producto.nombre}</p>
-                    <img src={producto.imagen} alt={producto.nombre} />
                     <p>{producto.precio}€</p>
-                    <button onClick={() => disminuirCantidad(producto)}>-</button>
-                    <span>{producto.cantidad}</span>
-                    <button onClick={() => agregarProducto(producto)}>+</button>
+                    <button type='button' class="btn primary" onClick={() => disminuirCantidad(producto)}>-</button>
+                    <span className=''>{producto.cantidad}</span>
+                    <button type='button' class="btn primary" onClick={() => agregarProducto(producto)}>+</button>
                 </div>
             ))}
-            <button onClick={enviarComanda}>Enviar Comanda</button>
+            <button type='button' class="btn btn-outline-success" onClick={enviarComanda}>Enviar Comanda</button>
         </div>
+        
     );
 }
 
