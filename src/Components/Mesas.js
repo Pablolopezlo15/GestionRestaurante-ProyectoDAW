@@ -47,14 +47,22 @@ function Mesas() {
     async function cerrarMesa(id) {
         const db = getFirestore();
         const mesaRef = doc(db, 'mesas', id);
-        await updateDoc(mesaRef, { estado: 'libre', horacierre: new Date().toLocaleTimeString(), dia: new Date().toLocaleDateString()});
+        // await updateDoc(mesaRef, { estado: 'libre', horacierre: new Date().toLocaleTimeString(), dia: new Date().toLocaleDateString()});
 
         const mesaSnap = await getDoc(mesaRef);
         const mesaData = mesaSnap.data();
     
         const comandasQuery = query(collection(db, 'comandas'), where('idMesa', '==', id));
         const comandasSnapshot = await getDocs(comandasQuery);
+
+        if (comandasSnapshot.empty) {
+            await updateDoc(mesaRef, { estado: 'libre', horacierre: new Date().toLocaleTimeString(), dia: new Date().toLocaleDateString()});
+
+            return;
+        }
     
+        await updateDoc(mesaRef, { estado: 'libre', horacierre: new Date().toLocaleTimeString(), dia: new Date().toLocaleDateString()});
+
         const registroComandasRef = collection(db, 'registroMesas');
 
         await addDoc(registroComandasRef, {
@@ -80,8 +88,8 @@ function Mesas() {
         setMostrarCreacionComanda(false);
     }
 
-    function calcularCuenta(mesa, horaApertura) {
-        setPdfDocument(<PDF mesa={mesa} horaApertura={horaApertura} />);
+    function calcularCuenta(mesa, horaApertura, comandasPendientes) {
+        setPdfDocument(<PDF mesa={mesa} horaApertura={horaApertura} comandasPendientes={comandasPendientes} />);
         console.log('Cuenta calculada');
     }
 
@@ -128,21 +136,21 @@ function Mesas() {
                                     <button type="button" class="btn btn-outline-primary" onClick={() => crearComanda(mesa.id)}>Nueva comanda</button>
 
                                     {mesaActual === mesa.id && mostrarCreacionComanda && 
-                                        <div>
-                                            <button type="button" class="btn btn-outline-secondary" onClick={ocultarComanda}>Ocultar Comanda</button>
+                                        <div className='d-flex flex-column'>
+                                            <button type="button" class="btn btn-outline-secondary" onClick={ocultarComanda}>Cerrar Comanda</button>
                                             <CrearComanda idMesa={mesaActual} numeroMesa={mesa.numero} />
                                         </div>
 
                                     }
-                                    <button type='button' class="btn btn-info" onClick={() => calcularCuenta(mesaActual, mesa.horaapertura)}>Calcular Cuenta</button>
+                                    <button type='button' class="btn btn-info" onClick={() => calcularCuenta(mesaActual, mesa.horaapertura, comandasPendientes)}>Calcular Cuenta</button>
                                     {pdfDocument && (
                                         <>
                                             <PDFDownloadLink document={pdfDocument} fileName="cuenta.pdf">
                                               {({ loading }) => (loading ? 'Cargando documento...' : 'Descargar cuenta')}
                                             </PDFDownloadLink>
-                                            {/* <PDFViewer>
+                                            <PDFViewer>
                                               {pdfDocument}
-                                            </PDFViewer> */}
+                                            </PDFViewer>
                                         </>
                                     )}
                                 </>

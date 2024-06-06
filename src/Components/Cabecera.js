@@ -53,6 +53,7 @@ function Cabecera() {
         const auth = getAuth();
         signOut(auth).then(() => {
             console.log('Sesión cerrada');
+            setIsAdmin(false);
         }).catch((error) => {
           // An error happened.
         });
@@ -90,7 +91,7 @@ function Cabecera() {
                                             <ul class="dropdown-menu">
                                             {isAdmin && (
                                                 <>
-                                                    <li><a class="dropdown-item" href="#">Gestionar Usuarios</a></li>
+                                                    <li><Link class="dropdown-item" to="/gestionarusuarios">Gestionar Usuarios</Link></li>
                                                     <li><Link class="dropdown-item" to="/gestionarcarta">Gestionar Carta</Link></li>
                                                 </>
                                             )}

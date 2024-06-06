@@ -22,6 +22,7 @@ import Carta from './Components/Carta';
 import Mesas from './Components/Mesas';
 import Comanda from './Components/Comanda';
 import GestionarCarta from './Components/GestionarCarta';
+import GestionarUsuarios from './Components/GestionarUsuarios';
 
 
 import PrivateRoute from './Components/PrivateRoute';
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
         path: "gestionarcarta",
         element: <PrivateRoute Component={GestionarCarta} />,
       },
+      {
+        path: "gestionarusuarios",
+        element: <PrivateRoute Component={GestionarUsuarios} />,
+      }
     ],
   },
 ]);

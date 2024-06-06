@@ -87,11 +87,14 @@ function GestionarCarta() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(editingProduct);
-
+    
+        if(editingProduct.imagen === '') {
+            editingProduct.imagen = newProduct.imagen;
+        }
+    
         await updateDoc(doc(db, "carta", editingProduct.categoria, "productos", editingProduct.id), editingProduct);
         setEditingProduct(null);
-
-
+    
         obtenerCarta();
     }
 
@@ -112,15 +115,18 @@ function GestionarCarta() {
             }, 
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    setNewProduct({ ...newProduct, imagen: downloadURL });
-                });
+                    if(editingProduct) {
+                        setEditingProduct({ ...editingProduct, imagen: downloadURL });
+                    } else {
+                        setNewProduct({ ...newProduct, imagen: downloadURL });
+                    }                });
             }
         );
     }
 
     return (
         <div>
-            <h1>Gestión Carta</h1>
+            <h1 className='text-center mt-4'>Gestión Carta</h1>
             <div className="container">
 
                 {isAdmin && (
@@ -166,7 +172,7 @@ function GestionarCarta() {
                                     </label>
                                     <label>
                                         Imagen:
-                                        <input type="file" onChange={handleImageUpload} />
+                                        <input type="file" value={newProduct.imagen} onChange={handleImageUpload} />
                                     </label>
                                     <button type="submit">Crear producto</button>
                                 </form>
@@ -193,17 +199,30 @@ function GestionarCarta() {
                                                                 <h2>{producto.nombre}</h2>
                                                                 <p><strong>Precio: </strong>{producto.precio} €</p>
                                                                 <p><strong>Ingredientes: </strong>{producto.ingredientes}</p>
-                                                                <button onClick={() => handleEdit(producto.id, { ...producto, categoria: item.id })}>Editar</button>
+                                                                <div className='d-flex flex-column gap-2'>
+                                                                    <p><strong>Acciones: </strong></p>
+                                                                    <button className='btn btn-outline-warning' onClick={() => handleEdit(producto.id, { ...producto, categoria: item.id })}>Editar</button>
 
-                                                                {editingProduct && (
-                                                                    <form onSubmit={handleSubmit}>
-                                                                        <input type="text" value={editingProduct.nombre} onChange={(e) => setEditingProduct({ ...editingProduct, nombre: e.target.value })} />
-                                                                        <input type="text" value={editingProduct.precio} onChange={(e) => setEditingProduct({ ...editingProduct, precio: e.target.value })} />
-                                                                        <textarea type="text" value={editingProduct.ingredientes} onChange={(e) => setEditingProduct({ ...editingProduct, ingredientes: e.target.value })} />
-                                                                        <button type="submit">Guardar cambios</button>
-                                                                    </form>
-                                                                )}
-                                                                <button onClick={() => handleDelete(producto.id, item.id)}>Eliminar</button>
+                                                                    {editingProduct && (
+                                                                        <form className='form form-edit-producto' onSubmit={handleSubmit}>
+                                                                            <label>Nombre:
+                                                                                <input type="text" value={editingProduct.nombre} onChange={(e) => setEditingProduct({ ...editingProduct, nombre: e.target.value })} />               
+                                                                            </label>
+                                                                            <label>Precio (€):
+                                                                                <input type="number" value={editingProduct.precio} onChange={(e) => setEditingProduct({ ...editingProduct, precio: e.target.value })} />
+                                                                            </label>
+                                                                            <label>Ingredientes:
+                                                                                <textarea type="text" value={editingProduct.ingredientes} onChange={(e) => setEditingProduct({ ...editingProduct, ingredientes: e.target.value })} />
+                                                                            </label>
+                                                                            <label>Imagen:
+                                                                                <input type="file" onChange={handleImageUpload} />
+                                                                            </label>
+                                                                            <button type="submit" className='button1'>Guardar cambios</button>
+                                                                        </form>
+                                                                    )}
+                                                                    <button className='btn btn-outline-danger' onClick={() => handleDelete(producto.id, item.id)}>Eliminar</button>
+                                                                </div>
+
                                                             </div>                                                
                                                         </div>
                                                     ))}
