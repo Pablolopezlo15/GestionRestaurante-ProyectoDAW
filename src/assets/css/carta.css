@@ -95,3 +95,27 @@
 
 }
 
+.btn-primario{
+    min-width: 50px;
+    background-color: var(--color-primary);
+    color: var(--color-text-secondary);
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.btn-primario:hover{
+    background-color: var(--color-primary);
+    color: var(--color-text-secondary);
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+@media screen and (max-width: 480px) {
+    .btn-primario{
+        max-width: 120px;
+    }
+    
+}

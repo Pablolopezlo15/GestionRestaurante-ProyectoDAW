@@ -99,7 +99,7 @@ function Mesas() {
                 <h1 className='text-center mt-3'>Mesas</h1>
                 
                 {mesas.map((mesa) => (
-                    <>
+                    <div key={mesa.id}>
                         <div className='mesa-info d-flex gap-3 align-items-center justify-content-center flex-wrap'>
                             <h2>Mesa {mesa.numero}</h2>
                             <p>Capacidad: {mesa.capacidad}</p>
@@ -113,15 +113,14 @@ function Mesas() {
                             {mesa.estado === 'ocupada' && 
                                 <>
                                     <p className='text-center'>Hora de apertura: {mesa.horaapertura} Día: {mesa.dia}</p>
-                                    <button type='button' class="btn btn-secondary" onClick={() => setMostrarComandasMesa(!mostrarComandasMesa)}>
+                                    <button type='button' className="btn btn-secondary" onClick={() => setMostrarComandasMesa(!mostrarComandasMesa)}>
                                         {mostrarComandasMesa ? 'Ocultar comandas' : 'Mostrar comandas'}
                                     </button>
 
                                     {mostrarComandasMesa &&
                                         <div className="card">
-                                            {comandasPendientes.map((comanda) => (
-                                                comanda.idMesa === mesa.id &&
-                                                <div className="card-body">
+                                            {comandasPendientes.map((comanda) => (comanda.idMesa === mesa.id &&
+                                                <div className="card-body" key={comanda.id}>
                                                     <h5 className="card-title">{comanda.estado}</h5>
                                                     <ul className="list-group list-group-flush">
                                                         {comanda.productos.map((producto) => (
@@ -132,17 +131,17 @@ function Mesas() {
                                             ))}
                                         </div>
                                     }
-                                    <button type="button" class="btn btn-outline-danger" onClick={() => cerrarMesa(mesa.id)}>Cerrar Mesa</button>
-                                    <button type="button" class="btn btn-outline-primary" onClick={() => crearComanda(mesa.id)}>Nueva comanda</button>
+                                    <button type="button" className="btn btn-outline-danger" onClick={() => cerrarMesa(mesa.id)}>Cerrar Mesa</button>
+                                    <button type="button" className="btn btn-outline-primary" onClick={() => crearComanda(mesa.id)}>Nueva comanda</button>
 
                                     {mesaActual === mesa.id && mostrarCreacionComanda && 
                                         <div className='d-flex flex-column'>
-                                            <button type="button" class="btn btn-outline-secondary" onClick={ocultarComanda}>Cerrar Comanda</button>
+                                            <button type="button" className="btn btn-outline-secondary" onClick={ocultarComanda}>Cerrar Comanda</button>
                                             <CrearComanda idMesa={mesaActual} numeroMesa={mesa.numero} />
                                         </div>
 
                                     }
-                                    <button type='button' class="btn btn-info" onClick={() => calcularCuenta(mesaActual, mesa.horaapertura, comandasPendientes)}>Calcular Cuenta</button>
+                                    <button type='button' className="btn btn-info" onClick={() => calcularCuenta(mesaActual, mesa.horaapertura, comandasPendientes)}>Calcular Cuenta</button>
                                     {pdfDocument && (
                                         <>
                                             <PDFDownloadLink document={pdfDocument} fileName="cuenta.pdf">
@@ -158,12 +157,12 @@ function Mesas() {
                             { mesa.estado === 'libre' &&
                             <>
                                 <p>Cerrada desde: {mesa.horacierre} Día: {mesa.dia}</p>
-                                <button type="button" class="btn btn-outline-success" onClick={() => abrirMesa(mesa.id)}>Abrir Mesa</button>
+                                <button type="button" className="btn btn-outline-success" onClick={() => abrirMesa(mesa.id)}>Abrir Mesa</button>
                             </>
                             }                   
                         </div>
                         
-                    </>
+                    </div>
                 ))}
             </div>
         </>

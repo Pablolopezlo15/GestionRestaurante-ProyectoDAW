@@ -1,9 +1,10 @@
 import app from '../firebase';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from 'firebase/auth';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getFirestore, collection, getDocs, setDoc, doc  } from "firebase/firestore";
+
 
 const InicioSesion = () => {
     const auth = getAuth(app);
@@ -60,7 +61,8 @@ const InicioSesion = () => {
         });
     }
   
-    
+
+
 
 
     return (

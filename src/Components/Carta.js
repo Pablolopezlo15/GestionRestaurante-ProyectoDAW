@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import '../assets/css/carta.css';
 
 function Carta() {
-
     const [carta, setCarta] = useState([]);
 
     useEffect(() => {

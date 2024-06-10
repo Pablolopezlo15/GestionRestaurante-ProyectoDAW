@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { deleteUser as firebaseDeleteUser, getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 import app from '../firebase';
@@ -36,8 +36,13 @@ function GestionarUsuarios() {
     }, [auth]);
 
     useEffect(() => {
+        const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
+            const usuariosData = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+            setUsuarios(usuariosData);
+        });
 
-    }, []);
+        return () => unsubscribe();
+    }, [db]);
 
     async function obtenerUsuarios() {
         const snapshot = await getDocs(collection(db, 'users'));
@@ -45,10 +50,20 @@ function GestionarUsuarios() {
         setUsuarios(usuariosData);
     }
 
-    async function handleDelete(id) {
-        await deleteDoc(doc(db, 'users', id));
+    async function borrarUsuario(userId) {
+        try {
+            await deleteDoc(doc(db, 'users', userId));
+            await auth.deleteUser(userId);
+            console.log('Usuario eliminado');
+        } catch (error) {
+            console.error('Error al eliminar el usuario:', error);
+        }
     }
 
+    async function cambiarRol(id, newRole) {
+        const userRef = doc(db, 'users', id);
+        await updateDoc(userRef, { rol: newRole });
+    }
 
     return (
         <>
@@ -57,28 +72,34 @@ function GestionarUsuarios() {
                 <div className="container">
                     <h1>Gestionar Usuarios</h1>
                     <Link to="/registro" className="btn btn-primary">Nuevo Usuario</Link>
-                    <table className="table mt-4">
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th>Rol</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div className="table-responsive">
+                        <table className="table mt-4">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                             {usuarios.map(usuario => (
                                 <tr key={usuario.id}>
                                     <td>{usuario.correo}</td>
-                                    <td>{usuario.rol}</td>
+                                    <td>
+                                        <select value={usuario.rol} onChange={(e) => cambiarRol(usuario.id, e.target.value)}>
+                                            <option value="admin">Admin</option>
+                                            <option value="user">User</option>
+                                        </select>
+                                    </td>
                                     <td className='d-flex flex-column gap-2'>
-                                        <button className="btn btn-warning w-100" >Editar</button>
-                                        <button className="btn btn-danger w-100">Eliminar</button>
+                                        {/* <button className="btn btn-warning w-100" >Editar</button> */}
+                                        <button className="btn btn-outline-danger w-100" onClick={() => borrarUsuario(usuario.id)}>Eliminar</button>
                                     </td>
                                 </tr>
                             ))}
-                        </tbody>
-                    </table>
-                        
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </>
         }

@@ -14,6 +14,7 @@ function GestionarCarta() {
     const [isAdmin, setIsAdmin] = useState(false);
     const [carta, setCarta] = useState([]);
     const [isFormVisible, setIsFormVisible] = useState(false);
+    const [esVisibleFormEditar, setEsVisibleFormEditar] = useState(false);
     const [isFormVisibleCategory, setIsFormVisibleCategory] = useState(false);
     const [newProduct, setNewProduct] = useState({ nombre: '', precio: '', ingredientes: '', imagen: '' });
     const [categoria, setCategoria] = useState('');
@@ -80,6 +81,11 @@ function GestionarCarta() {
     }
 
     const handleEdit = (id, producto) => {
+        if (esVisibleFormEditar == false) {
+            setEsVisibleFormEditar(true);
+        } else {
+            setEsVisibleFormEditar(false);
+        }
         setEditingProduct(producto);
     }
 
@@ -96,6 +102,7 @@ function GestionarCarta() {
         setEditingProduct(null);
     
         obtenerCarta();
+        setEsVisibleFormEditar(false);
     }
 
     const handleImageUpload = async (e) => {
@@ -133,49 +140,55 @@ function GestionarCarta() {
                     <>
                         <div>
                             <div className='btns-crear'>
-                                <button class="btn btn-outline-primary" onClick={() => setIsFormVisible(!isFormVisible)}>Añadir nuevo producto</button>
-                                <button class="btn btn-outline-primary" onClick={() => setIsFormVisibleCategory(!isFormVisibleCategory)}>Añadir nueva categoría</button>
+                                <button className="btn btn-outline-primary" onClick={() => setIsFormVisible(!isFormVisible)}>Añadir nuevo producto</button>
+                                <button className="btn btn-outline-primary" onClick={() => setIsFormVisibleCategory(!isFormVisibleCategory)}>Añadir nueva categoría</button>
                             </div>
 
                             {isFormVisibleCategory && (
-                                <form onSubmit={handleAddCategoria}>
-                                    <label>
-                                        Categoría:
-                                        <input type="text" value={nuevaCategoria} onChange={(e) => setNuevaCategoria(e.target.value)} />
-                                    </label>
-                                    <button type="submit">Crear categoría</button>
-                                </form>
+                                <div className='w-100 d-flex justify-content-center flex-column align-items-center'>
+                                    <h2>Crear nueva categoría</h2>
+                                    <form className='form-edit-producto w-75' onSubmit={handleAddCategoria}>
+                                        <label>
+                                            Categoría:
+                                            <input type="text" value={nuevaCategoria} onChange={(e) => setNuevaCategoria(e.target.value)} />
+                                        </label>
+                                        <button className='button1' type="submit">Crear categoría</button>
+                                    </form>
+                                </div>
                             )}
 
                             {isFormVisible && (
-                                <form onSubmit={handleAddProduct}>
-                                    <label>
-                                        Categoría:
-                                        <select value={categoriaElegida} onChange={(e) => setCategoriaElegida(e.target.value)}>
-                                            {carta.map((item) => (
-                                                <option key={item.id} value={item.id}>{item.categoria}</option>
-                                            ))}
-                                        </select>
+                                <div className='w-100 d-flex justify-content-center flex-column align-items-center'>
+                                    <h2>Crear nuevo producto</h2>
+                                    <form className='form-edit-producto w-75' onSubmit={handleAddProduct}>
+                                        <label>
+                                            Categoría:
+                                            <select value={categoriaElegida} onChange={(e) => setCategoriaElegida(e.target.value)}>
+                                                {carta.map((item) => (
+                                                    <option key={item.id} value={item.id}>{item.categoria}</option>
+                                                ))}
+                                            </select>
 
-                                    </label>
-                                    <label>
-                                        Nombre:
-                                        <input type="text" value={newProduct.nombre} onChange={(e) => setNewProduct({ ...newProduct, nombre: e.target.value })} />
-                                    </label>
-                                    <label>
-                                        Precio:
-                                        <input type="number" value={newProduct.precio} onChange={(e) => setNewProduct({ ...newProduct, precio: e.target.value })} />
-                                    </label>
-                                    <label>
-                                        Ingredientes:
-                                        <input type="text" value={newProduct.ingredientes} onChange={(e) => setNewProduct({ ...newProduct, ingredientes: e.target.value })} />
-                                    </label>
-                                    <label>
-                                        Imagen:
-                                        <input type="file" value={newProduct.imagen} onChange={handleImageUpload} />
-                                    </label>
-                                    <button type="submit">Crear producto</button>
-                                </form>
+                                        </label>
+                                        <label>
+                                            Nombre:
+                                            <input type="text" value={newProduct.nombre} onChange={(e) => setNewProduct({ ...newProduct, nombre: e.target.value })} />
+                                        </label>
+                                        <label>
+                                            Precio:
+                                            <input type="number" value={newProduct.precio} onChange={(e) => setNewProduct({ ...newProduct, precio: e.target.value })} />
+                                        </label>
+                                        <label>
+                                            Ingredientes:
+                                            <textarea rows='4' cols='50' value={newProduct.ingredientes} onChange={(e) => setNewProduct({ ...newProduct, ingredientes: e.target.value })} />
+                                        </label>
+                                        <label>
+                                            Imagen:
+                                            <input type="file" value={newProduct.imagen} onChange={handleImageUpload} />
+                                        </label>
+                                        <button className='button1' type="submit">Crear producto</button>
+                                    </form>
+                                </div>
                             )}
 
 
@@ -203,7 +216,7 @@ function GestionarCarta() {
                                                                     <p><strong>Acciones: </strong></p>
                                                                     <button className='btn btn-outline-warning' onClick={() => handleEdit(producto.id, { ...producto, categoria: item.id })}>Editar</button>
 
-                                                                    {editingProduct && (
+                                                                    {editingProduct && producto.id === editingProduct.id && esVisibleFormEditar && (
                                                                         <form className='form form-edit-producto' onSubmit={handleSubmit}>
                                                                             <label>Nombre:
                                                                                 <input type="text" value={editingProduct.nombre} onChange={(e) => setEditingProduct({ ...editingProduct, nombre: e.target.value })} />               

@@ -1,0 +1,58 @@
+.select-mesas {
+    width: auto;
+}
+
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-pendiente{
+    border-left: 10px solid #dc3545;
+}
+
+.card-enpreparacion{
+    border-left: 10px solid #ffc107;
+}
+
+.card-listo{
+    border-left: 10px solid #28a745;
+}
+
+.card-entregado{
+    border-left: 10px solid #007bff;
+
+}
+
+.card-title {
+    margin-bottom: 0.5rem;
+}
+
+.btn {
+    margin-right: 0.5rem;
+}
+
+.btn:last-child {
+    margin-right: 0;
+}
+
+.texto-naranja {
+    color: #ffc107 !important;
+}
+
+.texto-verde {
+    color: #28a745 !important;
+}
+
+.texto-rojo {
+    color: #dc3545 !important;
+}
+
+.texto-azul {
+    color: #007bff !important;
+}

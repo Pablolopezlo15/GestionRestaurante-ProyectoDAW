@@ -63,39 +63,38 @@ function Cabecera() {
         <>
             <header>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="#"><Link to="/"><img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/logo512.png?alt=media&token=a298d274-8701-4272-aba8-1866919185c6" className='img-logo' alt="Logo" /></Link></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                    <div className="container-fluid">
+                        <Link className="navbar-brand" to="/"><img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/logo512.png?alt=media&token=a298d274-8701-4272-aba8-1866919185c6" className='img-logo' alt="Logo" /></Link>                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
                     </button>
-                        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                            <ul class="navbar-nav">
-                                <li class="nav-item btn-cabecera">
-                                    <Link class="nav-link" to="/carta">Carta</Link>
+                        <div className="collapse navbar-collapse" id="navbarNavDropdown">
+                            <ul className="navbar-nav">
+                                <li className="nav-item btn-cabecera">
+                                    <Link className="nav-link" to="/carta">Carta</Link>
                                 </li>
                                 { !user && 
-                                    <li class="nav-item btn-cabecera">
-                                        <Link class="nav-link" to="/login">Inicia Sesión</Link>
+                                    <li className="nav-item btn-cabecera">
+                                        <Link className="nav-link" to="/login">Inicia Sesión</Link>
                                     </li>
                                 }
                                 { user && 
                                 <>
-                                    <li class="nav-item btn-cabecera">
-                                        <Link class="nav-link" to="/mesas">Mesas</Link>
+                                    <li className="nav-item btn-cabecera">
+                                        <Link className="nav-link" to="/mesas">Mesas</Link>
                                     </li>
-                                    <li class="nav-item btn-cabecera">
-                                        <Link class="nav-link" to="/comanda">Comandas</Link>
+                                    <li className="nav-item btn-cabecera">
+                                        <Link className="nav-link" to="/comanda">Comandas</Link>
                                     </li>
-                                    <li class="nav-item dropdown btn-cabecera">
-                                        <a class="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">Bienvenido, {user.email}</a>
-                                            <ul class="dropdown-menu">
+                                    <li className="nav-item dropdown btn-cabecera">
+                                        <a className="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">Bienvenido, {user.displayName}</a>
+                                            <ul className="dropdown-menu">
                                             {isAdmin && (
                                                 <>
-                                                    <li><Link class="dropdown-item" to="/gestionarusuarios">Gestionar Usuarios</Link></li>
-                                                    <li><Link class="dropdown-item" to="/gestionarcarta">Gestionar Carta</Link></li>
+                                                    <li><Link className="dropdown-item" to="/gestionarusuarios">Gestionar Usuarios</Link></li>
+                                                    <li><Link className="dropdown-item" to="/gestionarcarta">Gestionar Carta</Link></li>
                                                 </>
                                             )}
-                                                <li><a class="dropdown-item" href="#" onClick={logout}>Cerrar Sesión</a></li>
+                                                <li><a className="dropdown-item" href="#" onClick={logout}>Cerrar Sesión</a></li>
                                             </ul>
                                     </li>
                                     </>

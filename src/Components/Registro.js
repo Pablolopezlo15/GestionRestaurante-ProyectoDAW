@@ -40,7 +40,7 @@ function Registro() {
                     setDoc(doc(db, "users", user.uid), {
                         rol: rol,
                         uid: user.uid,
-                        email: correo,
+                        correo: correo,
                     });
                 }).catch((error) => {
                     console.log(error);
@@ -66,23 +66,26 @@ function Registro() {
     }, [auth]);
 
     return(
-        <div>
+        <div className='d-flex flex-column w-100 justify-content-center align-items-center'>
             <h1>Registro</h1>
             {isAdmin && (
-                <form>
-                    <label>Nombre</label>
-                    <input type="text" name="nombre" id="nombre" />
-                    <label>Rol</label>
-                    <select name="rol">
-                        <option value="admin">Administrador</option>
-                        <option value="user">Usuario</option>
-                    </select>
-
-                    <label>Correo</label>
-                    <input type="email" name="correo" id="correo" />
-                    <label>Contraseña</label>
-                    <input type="password" name="contraseña" id="contraseña" />
-                    <button onClick={registro}>Registrarse</button>
+                <form className='form-edit-producto w-75'>
+                    <label>Nombre: 
+                        <input type="text" name="nombre" id="nombre" />
+                    </label>
+                    <label>Rol: 
+                        <select name="rol">
+                            <option value="admin">Administrador</option>
+                            <option value="user">Usuario</option>
+                        </select>
+                    </label>
+                    <label>Correo: 
+                        <input type="email" name="correo" id="correo" />
+                    </label>
+                    <label>Contraseña:
+                        <input type="password" name="contraseña" id="contraseña" />
+                    </label>
+                    <button className='button1' onClick={registro}>Registrarse</button>
                 </form>
             )}
             {!isAdmin && <p>No tienes permisos para acceder a esta página</p>}

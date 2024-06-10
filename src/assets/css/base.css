@@ -81,12 +81,11 @@ textarea{
     width: 100%;
   }
   
-  /* Estilo para las etiquetas */
   .form-edit-producto label {
     width: 100%;
   }
   
-  .form-edit-producto input[type="text"],input[type="number"],input[type="file"],
+  .form-edit-producto input[type="text"],input[type="number"],input[type="file"],input[type="email"],input[type="password"],
   .form-edit-producto textarea {
     width: 100%;
     padding: 10px;

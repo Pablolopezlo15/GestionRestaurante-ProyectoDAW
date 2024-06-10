@@ -6,7 +6,6 @@ import app from '../firebase';
 function CrearComanda({ idMesa, numeroMesa }) {
     const [comanda, setComanda] = useState([]);
     const [carta, setCarta] = useState([]);
-    const [mostrarCarta, setMostrarCarta] = useState(true);
     const db = getFirestore();
 
 
@@ -52,7 +51,9 @@ function CrearComanda({ idMesa, numeroMesa }) {
     async function enviarComanda() {
         const comandaData = {
             productos: comanda,
-            estado: 'pendiente',
+            horacreacion: new Date().toLocaleTimeString(),
+            hora: new Date().toLocaleTimeString(),
+            estado: 'Pendiente',
             idMesa: idMesa,
             numeroMesa: numeroMesa
         };
@@ -61,13 +62,11 @@ function CrearComanda({ idMesa, numeroMesa }) {
         await addDoc(collection(db, 'mesas', idMesa, 'comandas'), { idComanda: comandaRef.id });
 
         setComanda([]);
-        setMostrarCarta(false);
         console.log('Comanda enviada');
     }
 
     return (
         <div>
-            {mostrarCarta && (
             <>
                 <h2>Elige los productos</h2>
 
@@ -85,7 +84,7 @@ function CrearComanda({ idMesa, numeroMesa }) {
                                         <div key={producto.id}   className='producto-comanda d-flex justify-content-between'>
                                             <p>{producto.nombre}</p>
                                             <p>{producto.precio}€</p>
-                                            <button type='button' class="btn primary" onClick={() => agregarProducto(producto)}>Agregar a la comanda</button>
+                                            <button type='button' className="btn btn-primario" onClick={() => agregarProducto(producto)}>Agregar a la comanda</button>
                                         </div>
                                     ))}
                                 </div>
@@ -94,19 +93,25 @@ function CrearComanda({ idMesa, numeroMesa }) {
                     ))}
                 </div>
             </>
-            )}
 
-            <h2>Productos en la comanda:</h2>
-            {comanda.map((producto, index) => (
-                <div key={index} className='d-flex  align-items-center gap-2'>
-                    <p>{producto.nombre}</p>
-                    <p>{producto.precio}€</p>
-                    <button type='button' class="btn primary" onClick={() => disminuirCantidad(producto)}>-</button>
-                    <span className=''>{producto.cantidad}</span>
-                    <button type='button' class="btn primary" onClick={() => agregarProducto(producto)}>+</button>
-                </div>
-            ))}
-            <button type='button' class="btn btn-outline-success" onClick={enviarComanda}>Enviar Comanda</button>
+            <div className="container mt-4">
+                <h2 className="mb-4">Productos en la comanda:</h2>
+                    {comanda.map((producto, index) => (
+                        <div key={index} className="d-flex align-items-center justify-content-between mb-3 p-3 border rounded shadow-sm">
+                            <div className="d-flex align-items-center gap-3">
+                                <p className="mb-0"><strong>{producto.nombre}</strong></p>
+                                <p className="mb-0 text-muted">{producto.precio}€</p>
+                            </div>
+                            <div className="d-flex align-items-center gap-2">
+                                <button type="button" className="btn btn-primario" onClick={() => disminuirCantidad(producto)}>-</button>
+                                <span className="px-3">{producto.cantidad}</span>
+                                <button type="button" className="btn btn-primario" onClick={() => agregarProducto(producto)}>+</button>
+                            </div>
+                        </div>
+                    ))}
+                <button type="button" className="btn btn-success mt-4" onClick={enviarComanda}>Enviar Comanda</button>
+            </div>
+
         </div>
         
     );
