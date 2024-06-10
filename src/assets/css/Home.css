@@ -1,10 +1,11 @@
 .App-header {
-    background-image: url(../img/restaurant.avif);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 50vh;
+   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #1E1E1E 95%), url(../img/restaurant1.jpg);
+   background-size: cover;
+   background-position: center;
+   background-repeat: no-repeat;
+   height: 60vh;
 }
+
 
 .slidercontenedor{
     display: flex;
@@ -18,27 +19,28 @@
 }
 
 .link:hover{
-    color: var(--color-secondary);
+   color: var(--color-secondary);
 }
 
 .link-inicio{
-    text-decoration: none;
-    color: var(--color-text-secondary);
+   text-decoration: none;
+   color: var(--color-text-secondary);
 }
 
 .inicio-empleado{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2vw;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 2vw;
+   margin-bottom: 5vw;
+   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .slider2 {
-    position: relative;
-    overflow: hidden;
-    /* width: 100%; */
-    max-width: 80vw;
-    margin: 50px auto;
+   position: relative;
+   overflow: hidden;
+   max-width: 80vw;
+   margin: 50px auto;
  }
  
  .slides2 {
@@ -94,11 +96,17 @@
 
 
 .contact-section {
+   display: flex;
+   align-items: center;
+   justify-content: center;
    text-align: center;
    padding: 50px 0;
 }
 
+
+
 .contact-info {
+   width: 50%;
    margin-bottom: 20px;
 }
 
@@ -108,10 +116,23 @@
 }
 
 .footer {
+   min-height: 20vh;
    background-color: #333;
    color: #fff;
    text-align: center;
+   display: flex;
+   justify-content: center;
+   gap: 5vw;
+   align-items: center;
    padding: 20px 0;
+}
+
+@media screen and (max-width: 768px) {
+   .footer{
+      flex-direction: column;
+   
+   }
+   
 }
 
 .footer a {
@@ -127,6 +148,22 @@
 
 #map {
    height: 400px;
-   width: 100%;
+   width: 50%;
+   max-width: 750px;
    margin-top: 20px;
+}
+
+@media screen and (max-width: 768px) {
+   .contact-section {
+      flex-direction: column;
+   }
+
+   .contact-info {
+      width: 100%;
+   }
+
+   #map {
+      width: 100%;
+   }
+   
 }

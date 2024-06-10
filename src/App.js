@@ -35,7 +35,7 @@ function App() {
 
     return (
         <div className="App">
-            <header className="App-header text-center">
+            <header className="App-header text-center d-flex flex-column justify-content-end">
                 <h1>Restaurante Pablo López</h1>
                 <p>Bienvenido a la web</p>
                 <div>
@@ -49,12 +49,24 @@ function App() {
                         <h2 className='text-center'>Visita nuestra carta <Link className='link' to="/carta">aquí</Link></h2>
                         <div className="slides2">
                             <div className="slide2" id="slide1">
+                                <img src='https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/patatas-cheese-bacon-foto-principal.jpg?alt=media&token=f68b630f-412c-45b6-ad48-5473a00e809b' className="slide2-img" />
+                                <p>Entrantes</p>
+                            </div>
+                            <div className="slide2" id="slide2">
                                 <img src='https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2Fprimer-plano-de-la-pizza-prosciutto-o-de-jamon-cocido.webp?alt=media&token=d82b7977-ed10-46ac-9297-af077c9dd4fa' className="slide2-img" />
                                 <p>Pizzas</p>
                             </div>
-                            <div className="slide2" id="slide2">
-                                <img src='' className="slide2-img" />
-                                <p>Valoración <b> pAAAAA </b><i className="ri-star-line"></i></p>
+                            <div className="slide2" id="slide3">
+                                <img src='https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2Fprimer-plano-de-la-pizza-prosciutto-o-de-jamon-cocido.webp?alt=media&token=d82b7977-ed10-46ac-9297-af077c9dd4fa' className="slide2-img" />
+                                <p>Carnes</p>
+                            </div>
+                            <div className="slide2" id="slide4">
+                                <img src='https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2Fprimer-plano-de-la-pizza-prosciutto-o-de-jamon-cocido.webp?alt=media&token=d82b7977-ed10-46ac-9297-af077c9dd4fa' className="slide2-img" />
+                                <p>Pescados</p>
+                            </div>
+                            <div className="slide2" id="slide5">
+                                <img src='https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2Fprimer-plano-de-la-pizza-prosciutto-o-de-jamon-cocido.webp?alt=media&token=d82b7977-ed10-46ac-9297-af077c9dd4fa' className="slide2-img" />
+                                <p>Postres</p>
                             </div>
                         </div>
                         <button className="prev" onClick={() => changeSlide(-1)}>&#10094;</button>
@@ -62,36 +74,38 @@ function App() {
                     </div>
                 </section>
 
-                <section className="contact-section">
+                <section className='text-center'>
                     <h2>Contacta con Nosotros</h2>
-                    <div className="contact-info">
-                        <p><strong>Dirección:</strong> Calle Ejemplo 123, Ciudad, País</p>
-                        <p><strong>Teléfono:</strong> +34 123 456 789</p>
-                        <p><strong>Email:</strong> contacto@restaurantepablolopez.com</p>
-                    </div>
-                    <div id="map">
-                    <MapContainer center={[37.1773363, -3.5985571]} zoom={13} style={{ height: "400px", width: "100%" }}>
-                        <TileLayer
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        />
-                        <Marker position={[37.1773363, -3.5985571]} icon={customIcon}>
-                            <Popup>
-                                Restaurante Pablo López. <br /> Calle Ejemplo 123.
-                            </Popup>
-                        </Marker>
-                    </MapContainer>
+                    <div className="contact-section">
+                        <div className="contact-info">
+                            <p><strong>Dirección:</strong> C/ Recogidas, Granada, España</p>
+                            <p><strong>Teléfono:</strong> +34 900 00 00 00</p>
+                            <p><strong>Email:</strong> <a href="mailto:plopezlozano12@gmail.com">plopezlozano12@gmail.com</a></p>
+                            </div>
+                        <div id="map">
+                            <MapContainer center={[37.1773363, -3.5985571]} zoom={13} style={{ height: "400px", width: "100%" }}>
+                                <TileLayer
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                />
+                                <Marker position={[37.1773363, -3.5985571]} icon={customIcon}>
+                                    <Popup>
+                                        Restaurante Pablo López. <br /> Calle Ejemplo 123.
+                                    </Popup>
+                                </Marker>
+                            </MapContainer>
+                        </div>
                     </div>
                 </section>
             </main>
 
             <footer className="footer">
-                <p>&copy; 2024 Restaurante Pablo López. Todos los derechos reservados.</p>
                 <p>Síguenos en nuestras redes sociales:
-                    <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"> Facebook</a>,
-                    <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer"> Twitter</a>,
-                    <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"> Instagram</a>
+                    <a href="https://www.facebook.com" target="_blank"><i className="ri-facebook-fill"></i></a>
+                    <a href="https://www.twitter.com" target="_blank"><i className="ri-twitter-x-fill"></i></a>
+                    <a href="https://www.instagram.com" target="_blank"><i className="ri-instagram-fill"></i></a>
                 </p>
+                <p>&copy; 2024 Restaurante Pablo López.</p>
             </footer>
         </div>
     );

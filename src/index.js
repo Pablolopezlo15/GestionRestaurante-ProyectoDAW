@@ -81,34 +81,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </>,
 )
 
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <App/>,
-//   },
-//   {
-//     path: "login",
-//     element: <InicioSesion/>,
-//   },
-//   {
-//     path: "carta",
-//     element: <Carta/>,
-//   },
-//   {
-//     path: "mesas",
-//     element: <PrivateRoute Component={Mesas} />,
-    
-//   }
-// ]);
-
-
-// const root = ReactDOM.createRoot(document.getElementById('root'));
-// root.render(
-//   <React.StrictMode>
-//     <RouterProvider router={router}/>
-//   </React.StrictMode>
-// );
-
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA
