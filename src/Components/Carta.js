@@ -47,7 +47,12 @@ function Carta() {
                                         {item.productos && item.productos.map(producto => (
                                             <div key={producto.id} className="producto">
                                                 <div className="producto__imagen">
-                                                    <img src={producto.imagen} alt={producto.nombre} />
+                                                    {producto.imagen &&
+                                                        <img src={producto.imagen} alt={producto.nombre} />
+                                                    }
+                                                    {!producto.imagen &&
+                                                        <img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/imagenotfound.jpg?alt=media&token=d53941ce-18b4-4f99-bdea-85e6f86943a9" alt={producto.nombre} />
+                                                    }
                                                 </div>
                                                 <div className="producto__info">
                                                     <h2>{producto.nombre}</h2>

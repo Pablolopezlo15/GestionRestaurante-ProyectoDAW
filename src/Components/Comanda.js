@@ -105,7 +105,7 @@ function Comanda() {
                                     </div>
                                 ))}
 
-                                <div className='d-flex mt-2'>
+                                <div className='d-flex mt-2 gap-2'>
                                     <button className='btn btn-warning' onClick={() => enPreparacion(comanda.id)}>En preparación</button>
                                     <button className='btn btn-success' onClick={() => listo(comanda.id)}>Listo</button>
                                     <button className='btn btn-primary' onClick={() => entregado(comanda.id)}>Entregado</button>

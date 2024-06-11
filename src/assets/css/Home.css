@@ -8,14 +8,14 @@
 
 
 .slidercontenedor{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
 
 .link{
-    text-decoration: none;
-    color: var(--color-primary);
+   text-decoration: none;
+   color: var(--color-primary);
 }
 
 .link:hover{
@@ -41,57 +41,57 @@
    overflow: hidden;
    max-width: 80vw;
    margin: 50px auto;
- }
+}
  
- .slides2 {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
- }
+.slides2 {
+   display: flex;
+   transition: transform 0.5s ease-in-out;
+}
  
- .slide2 {
-    width: 100%;
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
- }
- .slide2-img:hover{
-    cursor: pointer;
-    transition: all 0.25s ease-in-out;
-    scale: 0.85;
- }
- .slide2 img {
-    max-width: 80%;
-    height: auto;
-    max-height: 50vh;
- }
+.slide2 {
+   width: 100%;
+   flex: 0 0 auto;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+}
+.slide2-img:hover{
+   cursor: pointer;
+   transition: all 0.25s ease-in-out;
+   scale: 0.85;
+}
+.slide2 img {
+   max-width: 80%;
+   height: auto;
+   max-height: 50vh;
+}
  
- .slider2 button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
- }
+.slider2 button {
+   position: absolute;
+   top: 50%;
+   transform: translateY(-50%);
+   font-size: 24px;
+   background: none;
+   border: none;
+   cursor: pointer;
+}
  
- .prev {
-    left: 10px;
-    color: white;
- }
+.prev {
+   left: 10px;
+   color: white;
+}
  
- .next {
-    right: 10px;
-    color: white
- }
+.next {
+   right: 10px;
+   color: white
+}
  
- @keyframes slide2 {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-100%); }
-    50% { transform: translateX(-200%); }
-    75% { transform: translateX(-300%); }
+@keyframes slide2 {
+   0% { transform: translateX(0); }
+   25% { transform: translateX(-100%); }
+   50% { transform: translateX(-200%); }
+   75% { transform: translateX(-300%); }
 }
 
 
@@ -128,6 +128,7 @@
 }
 
 @media screen and (max-width: 768px) {
+
    .footer{
       flex-direction: column;
    
