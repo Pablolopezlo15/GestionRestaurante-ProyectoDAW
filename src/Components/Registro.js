@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, getDocs, setDoc, doc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signOut } from 'firebase/auth';
 
 function Registro() {
     const auth = getAuth(app);
@@ -11,6 +11,7 @@ function Registro() {
 
     let user = auth.currentUser;
     const [isAdmin, setIsAdmin] = useState(false);
+    const [errorYaEnUso, setErrorYaEnUso] = useState(false);
 
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));
@@ -37,6 +38,13 @@ function Registro() {
                 updateProfile(user, {
                     displayName: nombre,
                 }).then(() => {
+                    sendEmailVerification(user).then(() => {
+                        console.log("Correo de verificación enviado");
+                        signOut(auth);
+
+                    }).catch((error) => {
+                        console.log(error);
+                    });
                     setDoc(doc(db, "users", user.uid), {
                         rol: rol,
                         uid: user.uid,
@@ -47,6 +55,10 @@ function Registro() {
                 });
             })
             .catch((error) => {
+                if (error.code === 'auth/email-already-in-use') {
+                    setErrorYaEnUso(true);
+                    console.log('El correo ya está en uso');
+                }
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorCode);
@@ -67,26 +79,30 @@ function Registro() {
 
     return(
         <div className='d-flex flex-column w-100 justify-content-center align-items-center'>
-            <h1>Registro</h1>
             {isAdmin && (
-                <form className='form-edit-producto w-75'>
-                    <label>Nombre: 
-                        <input type="text" name="nombre" id="nombre" />
-                    </label>
-                    <label>Rol: 
-                        <select name="rol">
-                            <option value="admin">Administrador</option>
-                            <option value="user">Usuario</option>
-                        </select>
-                    </label>
-                    <label>Correo: 
-                        <input type="email" name="correo" id="correo" />
-                    </label>
-                    <label>Contraseña:
-                        <input type="password" name="contraseña" id="contraseña" />
-                    </label>
-                    <button className='button1' onClick={registro}>Registrarse</button>
-                </form>
+                <>
+                    <h1>Registro</h1>
+                    {errorYaEnUso && <p className='text-danger'>El correo ya está en uso</p>}
+                    <form className='form-edit-producto w-75'>
+                        <label>Nombre: 
+                            <input type="text" name="nombre" id="nombre" />
+                        </label>
+                        <label>Rol: 
+                            <select name="rol">
+                                <option value="admin">Administrador</option>
+                                <option value="user">Usuario</option>
+                            </select>
+                        </label>
+                        <label>Correo: 
+                            <input type="email" name="correo" id="correo" />
+                        </label>
+                        <label>Contraseña:
+                            <input type="password" name="contraseña" id="contraseña" />
+                        </label>
+                        <button className='button1' onClick={registro}>Registrarse</button>
+                    </form>
+                </>
+                
             )}
             {!isAdmin && <p>No tienes permisos para acceder a esta página</p>}
         </div>

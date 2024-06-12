@@ -10,14 +10,6 @@ function Comanda() {
 
     const db = getFirestore();
 
-    // const obtenerComandasPendientes = () => {
-    //     const q = query(collection(db, 'comandas'));
-    //     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    //         setComandasPendientes(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    //     });
-    
-    //     return unsubscribe;
-    // };
 
     const obtenerComandasPendientes = () => {
         const q = query(collection(db, 'comandas'));
@@ -71,11 +63,12 @@ function Comanda() {
     return (
         <>
             <div className='container'>
+
                 <div className='d-flex justify-content-center gap-2 mt-3'>
                     <h1>Comandas</h1>
                     <select className='form-select select-mesas' value={mesaSeleccionada} onChange={(e) => setMesaSeleccionada(e.target.value)}>
                         <option value="">Todas las mesas</option>
-                        {mesas.map((mesa, index) => (
+                        {mesas.sort((a, b) => a.numero - b.numero).map((mesa, index) => (
                             <option key={index} value={mesa.id}>Nº: {mesa.numero}</option>
                         ))}
                     </select>

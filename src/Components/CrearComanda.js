@@ -59,7 +59,7 @@ function CrearComanda({ idMesa, numeroMesa }) {
         };
     
         const comandaRef = await addDoc(collection(db, 'comandas'), comandaData);
-        await addDoc(collection(db, 'mesas', idMesa, 'comandas'), { idComanda: comandaRef.id });
+        // await addDoc(collection(db, 'mesas', idMesa, 'comandas'), { idComanda: comandaRef.id });
 
         setComanda([]);
         console.log('Comanda enviada');

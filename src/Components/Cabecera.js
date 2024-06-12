@@ -5,8 +5,6 @@ import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 
-// import '../assets/css/cabecera.css';
-import GestionarCarta from './GestionarCarta';
 
 function Cabecera() {
     const [user, setUser] = useState(null);
@@ -92,6 +90,7 @@ function Cabecera() {
                                                 <>
                                                     <li><Link className="dropdown-item" to="/gestionarusuarios">Gestionar Usuarios</Link></li>
                                                     <li><Link className="dropdown-item" to="/gestionarcarta">Gestionar Carta</Link></li>
+                                                    <li><Link className="dropdown-item" to="/gestionarmesas">Gestionar Mesas</Link></li>
                                                 </>
                                             )}
                                                 <li><a className="dropdown-item" href="#" onClick={logout}>Cerrar Sesión</a></li>

@@ -22,6 +22,9 @@ function GestionarCarta() {
     const [editingProduct, setEditingProduct] = useState(null);
     const [nuevaCategoria, setNuevaCategoria] = useState('');
 
+    const [loading, setLoading] = useState(true);
+
+
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));
         usersSnapshot.forEach((doc) => {
@@ -52,6 +55,8 @@ function GestionarCarta() {
         }
 
         setCarta(cartaData);
+        setLoading(false);
+
     }
 
 
@@ -137,7 +142,14 @@ function GestionarCarta() {
 
     return (
         <div>
-            <h1 className='text-center mt-4'>Gestión Carta</h1>
+            <div className='d-flex flex-column align-items-center gap-3'>
+                <h1 className='text-center mt-4'>Gestión Carta</h1>
+                {loading && 
+                    <div className="spinner-border text-warning" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                }
+            </div>
             <div className="container">
 
                 {isAdmin && (

@@ -95,8 +95,8 @@ function Mesas() {
 
     return (
         <>
+            <h1 className='text-center mt-3'>Mesas</h1>
             <div className='contenedor-principal'>
-                <h1 className='text-center mt-3'>Mesas</h1>
                 
                 {mesas.map((mesa) => (
                     <div key={mesa.id}>
