@@ -23,11 +23,35 @@ function Cabecera() {
     });
     }, []);
 
+    // useEffect(() => {
+    //     const unsubscribe = onAuthStateChanged(auth, (user) => {
+    //         if (user) {
+    //             comprobarRol(user);
+    //             obtenerNumeroComandasPendientes();
+    //         }
+    //     });
+
+    //     return () => unsubscribe();
+    // }, [auth]);
+
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 comprobarRol(user);
                 obtenerNumeroComandasPendientes();
+
+                const unsubscribeSnapshot = onSnapshot(collection(db, "users"), (snapshot) => {
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === "modified" && change.doc.data().uid === user.uid) {
+                            setIsAdmin(change.doc.data().rol === 'admin');
+                        }
+                    });
+                });
+    
+                return () => {
+                    unsubscribeSnapshot();
+                    unsubscribe();
+                }
             }
         });
 

@@ -23,6 +23,29 @@ function RegistroMesas() {
         });
     }
 
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                comprobarRol(user);
+    
+                const unsubscribeSnapshot = onSnapshot(collection(db, "users"), (snapshot) => {
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === "modified" && change.doc.data().uid === user.uid) {
+                            setIsAdmin(change.doc.data().rol === 'admin');
+                        }
+                    });
+                });
+    
+                return () => {
+                    unsubscribeSnapshot();
+                    unsubscribe();
+                }
+            }
+        });
+    
+        return () => unsubscribe();
+    }, [auth]);
+
     function obtenerRegistroMesas(dia, numero) {
         setLoading(true);
     
@@ -40,17 +63,6 @@ function RegistroMesas() {
     
         return unsubscribe;
     }
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                comprobarRol(user);
-            }
-        });
-
-        return () => unsubscribe();
-    }, [auth]);
-
 
     return(
         <div className='d-flex flex-column w-100 justify-content-center align-items-center'>
@@ -88,44 +100,43 @@ function RegistroMesas() {
                             </thead>
                             <tbody>
                             {mesas.filter(mesa => numeroMesa ? mesa.numero == numeroMesa : true).map((mesa) => (
-                                <tr key={mesa.id}>
-                                    <td>{mesa.numero}</td>
-                                    <td>{mesa.horaapertura}</td>
-                                    <td>{mesa.horacierre}</td>
-                                    <td>
-                                        <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target={`#modal${mesa.numero}`}>Ver comandas</button>
+    <tr key={mesa.id}>
+        <td>{mesa.numero}</td>
+        <td>{mesa.horaapertura}</td>
+        <td>{mesa.horacierre}</td>
+        <td>
+            <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target={`#modal${mesa.id}`}>Ver comandas</button>
 
-                                        <div className="modal fade" id={`modal${mesa.numero}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">Comandas de la mesa {mesa.numero}</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
+            <div className="modal fade" id={`modal${mesa.id}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Comandas de la mesa {mesa.numero}</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
 
-                                                    <div className="modal-body d-flex flex-column gap-1">
-                                                        {mesa.comandas.map((comanda) => (
-                                                            <div key={comanda.id} className='comanda-registro'>
-                                                                <p>Hora de la comanda: {comanda.horacreacion}</p>
-                                                                <p>{comanda.productos.map((producto) => (
-                                                                    <div>
-                                                                        <p></p>
-                                                                        <p>{producto.nombre} -- {producto.cantidad} unidad/es</p>
-                                                                    </div>
-                                                                ))}</p>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                    
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                        <div className="modal-body d-flex flex-column gap-1">
+                            {mesa.comandas.map((comanda) => (
+                                <div key={comanda.id} className='comanda-registro'>
+                                    <p>Hora de la comanda: {comanda.horacreacion}</p>
+                                    {comanda.productos.map((producto) => (
+                                        <div key={producto.id}>
+                                            <p>{producto.nombre} -- {producto.cantidad} unidad/es</p>
                                         </div>
-                                    </td>
-                                </tr>
+                                    ))}
+                                </div>
                             ))}
+                        </div>
+                        
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+))}
 
                             </tbody>
                         </table>

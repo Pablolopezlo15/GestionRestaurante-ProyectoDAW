@@ -25,9 +25,22 @@ function GestionarUsuarios() {
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 comprobarRol(user);
+    
+                const unsubscribeSnapshot = onSnapshot(collection(db, "users"), (snapshot) => {
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === "modified" && change.doc.data().uid === user.uid) {
+                            setIsAdmin(change.doc.data().rol === 'admin');
+                        }
+                    });
+                });
+    
+                return () => {
+                    unsubscribeSnapshot();
+                    unsubscribe();
+                }
             }
         });
         obtenerUsuarios();
@@ -61,6 +74,14 @@ function GestionarUsuarios() {
     }
 
     async function cambiarRol(id, newRole) {
+        const user = auth.currentUser;
+        if (user && user.uid === id) {
+            const confirmed = window.confirm("¿Estás seguro de que quieres cambiar tu propio rol?");
+            if (!confirmed) {
+                return;
+            }
+        }
+        
         const userRef = doc(db, 'users', id);
         await updateDoc(userRef, { rol: newRole });
     }

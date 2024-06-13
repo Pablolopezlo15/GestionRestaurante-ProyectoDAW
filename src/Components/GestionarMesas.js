@@ -29,9 +29,22 @@ function GestionarMesas() {
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 comprobarRol(user);
+    
+                const unsubscribeSnapshot = onSnapshot(collection(db, "users"), (snapshot) => {
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === "modified" && change.doc.data().uid === user.uid) {
+                            setIsAdmin(change.doc.data().rol === 'admin');
+                        }
+                    });
+                });
+    
+                return () => {
+                    unsubscribeSnapshot();
+                    unsubscribe();
+                }
             }
         });
         obtenerMesas();
@@ -134,7 +147,7 @@ function GestionarMesas() {
                                     <td>{mesa.numero}</td>
                                     <td>
                                         {editingId === mesa.id ? (
-                                            <input type="text" value={editCapacidad} onChange={(e) => setEditCapacidad(e.target.value)} />
+                                            <input type="text" className='border border-dark' value={editCapacidad} onChange={(e) => setEditCapacidad(e.target.value)} />
                                         ) : (
                                             mesa.capacidad
                                         )}

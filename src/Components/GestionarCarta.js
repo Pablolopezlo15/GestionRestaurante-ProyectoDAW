@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 import app from '../firebase';
@@ -35,12 +35,25 @@ function GestionarCarta() {
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 comprobarRol(user);
+    
+                const unsubscribeSnapshot = onSnapshot(collection(db, "users"), (snapshot) => {
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === "modified" && change.doc.data().uid === user.uid) {
+                            setIsAdmin(change.doc.data().rol === 'admin');
+                        }
+                    });
+                });
+    
+                return () => {
+                    unsubscribeSnapshot();
+                    unsubscribe();
+                }
             }
         });
-
+    
         return () => unsubscribe();
     }, [auth]);
 
