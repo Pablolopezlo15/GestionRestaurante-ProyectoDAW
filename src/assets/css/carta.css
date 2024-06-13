@@ -81,11 +81,11 @@
         width: 100%;
     }
 
-    .producto-comanda{
+    /* .producto-comanda{
         display: flex;
         flex-direction: column;
         gap: 1vw;
-    }
+    } */
     
 }
 

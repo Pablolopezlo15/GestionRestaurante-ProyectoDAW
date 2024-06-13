@@ -108,10 +108,10 @@ function CrearComanda({ idMesa, numeroMesa }) {
             <div className="container mt-4">
                 <h2 className="mb-4">Productos en la comanda:</h2>
                     {comanda.map((producto, index) => (
-                        <div key={index} className="d-flex align-items-center justify-content-between mb-3 p-3 border rounded shadow-sm">
+                        <div key={index} className="d-flex align-items-center justify-content-between mb-3 p-3 border rounded shadow-sm gap-2">
                             <div className="d-flex align-items-center gap-3">
-                                <p className="mb-0"><strong>{producto.nombre}</strong></p>
-                                <p className="mb-0 text-muted">{producto.precio}€</p>
+                                <p><strong>{producto.nombre}</strong></p>
+                                <p>{(producto.precio * producto.cantidad).toFixed(2)}€</p>
                             </div>
                             <div className="d-flex align-items-center gap-2">
                                 <button type="button" className="btn btn-primario" onClick={() => disminuirCantidad(producto)}>-</button>
