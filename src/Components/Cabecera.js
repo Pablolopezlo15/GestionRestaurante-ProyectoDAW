@@ -2,13 +2,17 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, onSnapshot, query } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
+import { set } from 'firebase/database';
 
 
 function Cabecera() {
     const [user, setUser] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
+
+    const [comandasPendientes, setComandasPendientes] = useState([]);
+    // const [sonidoActivo, setSonidoActivo] = useState(false);
 
     const auth = getAuth();
     const db = getFirestore();
@@ -23,6 +27,7 @@ function Cabecera() {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 comprobarRol(user);
+                obtenerNumeroComandasPendientes();
             }
         });
 
@@ -38,14 +43,6 @@ function Cabecera() {
         });
     }
 
-    let userName = null;
-    console.log(auth.currentUser);
-
-    if (auth.currentUser) {
-        let uid = auth.currentUser.uid;
-        let userName = auth.currentUser.displayName;
-        console.log('Usuario logueado: ' + userName + ' con uid: ' + uid);
-    }
 
     function logout() { 
         const auth = getAuth();
@@ -56,6 +53,29 @@ function Cabecera() {
           // An error happened.
         });
     }
+
+    function obtenerNumeroComandasPendientes() {
+        const q = query(collection(db, 'comandas'));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const newComandas = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const comandas = newComandas.filter(comanda => comanda.estado === 'Pendiente');
+            // if(sonidoActivo){
+            //     reproducirSonido(comandas.length);
+            // }
+            setComandasPendientes(comandas.length);
+        });
+    
+        return unsubscribe;
+    }
+
+    // function reproducirSonido(comandasLength) {
+    //     console.log(comandasPendientes + " - " + comandasLength + " - " + sonidoActivo)
+    //     if (comandasLength > comandasPendientes && sonidoActivo){
+    //         let audio = new Audio('./audio/notificacion.mp3');
+    //         audio.play();
+    //     }
+    // }
+
 
     return (
         <>
@@ -81,7 +101,7 @@ function Cabecera() {
                                         <Link className="nav-link" to="/mesas">Mesas</Link>
                                     </li>
                                     <li className="nav-item btn-cabecera">
-                                        <Link className="nav-link" to="/comanda">Comandas</Link>
+                                        <Link className="nav-link" to="/comanda">Comandas <span className='text-danger'>{comandasPendientes}</span></Link>
                                     </li>
                                     <li className="nav-item dropdown btn-cabecera">
                                         <a className="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">Bienvenido, {user.displayName}</a>
@@ -97,7 +117,13 @@ function Cabecera() {
                                                 <li><a className="dropdown-item" href="#" onClick={logout}>Cerrar Sesión</a></li>
                                             </ul>
                                     </li>
-                                    </>
+                                    {/* {   !sonidoActivo &&
+                                        <i className="ri-megaphone-fill text-danger" onClick={() => setSonidoActivo(!sonidoActivo)}></i>
+                                    }
+                                    {   sonidoActivo &&
+                                        <i className="ri-megaphone-line" onClick={() => setSonidoActivo(!sonidoActivo)}></i>
+                                    } */}
+                                </>
                                 }
                             </ul>
                         </div>

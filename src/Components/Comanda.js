@@ -17,13 +17,6 @@ function Comanda() {
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const newComandas = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     
-            newComandas.forEach((comanda, index) => {
-                if (comanda.estado === 'Listo' && comandasPendientes[index] && comandasPendientes[index].estado !== 'Listo') {
-                    let audio = new Audio('./audio/notificacion.mp3');
-                    audio.play();
-                }
-            });
-    
             setComandasPendientes(newComandas);
             setLoading(false);
         });
