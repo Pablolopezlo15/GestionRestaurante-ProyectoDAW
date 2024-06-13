@@ -91,6 +91,7 @@ function Cabecera() {
                                                     <li><Link className="dropdown-item" to="/gestionarusuarios">Gestionar Usuarios</Link></li>
                                                     <li><Link className="dropdown-item" to="/gestionarcarta">Gestionar Carta</Link></li>
                                                     <li><Link className="dropdown-item" to="/gestionarmesas">Gestionar Mesas</Link></li>
+                                                    <li><Link className="dropdown-item" to="/registromesas">Registro Mesas</Link></li>
                                                 </>
                                             )}
                                                 <li><a className="dropdown-item" href="#" onClick={logout}>Cerrar Sesión</a></li>

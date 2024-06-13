@@ -4,6 +4,7 @@ import { getFirestore, collection, getDocs, setDoc, doc } from 'firebase/firesto
 import { useEffect, useState } from 'react';
 
 import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signOut } from 'firebase/auth';
+import { set } from 'firebase/database';
 
 function Registro() {
     const auth = getAuth(app);
@@ -12,6 +13,8 @@ function Registro() {
     let user = auth.currentUser;
     const [isAdmin, setIsAdmin] = useState(false);
     const [errorYaEnUso, setErrorYaEnUso] = useState(false);
+    const [registrado, setRegistrado] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));
@@ -23,6 +26,9 @@ function Registro() {
     }
 
     function registro(e) {
+        setLoading(true);
+        setErrorYaEnUso(false);
+        setRegistrado(false);
         e.preventDefault();
     
         const nombre = document.getElementById('nombre').value;
@@ -40,6 +46,8 @@ function Registro() {
                 }).then(() => {
                     sendEmailVerification(user).then(() => {
                         console.log("Correo de verificación enviado");
+                        setRegistrado(true);
+                        setLoading(false);
                         signOut(auth);
 
                     }).catch((error) => {
@@ -82,15 +90,21 @@ function Registro() {
             {isAdmin && (
                 <>
                     <h1>Registro</h1>
+                    {loading && 
+                        <div className="spinner-border text-warning" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    }
                     {errorYaEnUso && <p className='text-danger'>El correo ya está en uso</p>}
-                    <form className='form-edit-producto w-75'>
+                    {registrado && <p className='text-success'>Usuario registrado. Revisa tu correo para verificar tu cuenta</p>}
+                    <form className='form-edit-producto  form-registro'>
                         <label>Nombre: 
                             <input type="text" name="nombre" id="nombre" />
                         </label>
                         <label>Rol: 
                             <select name="rol">
-                                <option value="admin">Administrador</option>
                                 <option value="user">Usuario</option>
+                                <option value="admin">Administrador</option>
                             </select>
                         </label>
                         <label>Correo: 

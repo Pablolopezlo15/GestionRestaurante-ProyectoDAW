@@ -12,6 +12,8 @@ function Mesas() {
     const [mostrarCreacionComanda, setMostrarCreacionComanda] = useState(false);
     const [mostrarComandasMesa, setMostrarComandasMesa] = useState(false);
     const [pdfDocument, setPdfDocument] = useState(null);
+
+    const [loading, setLoading] = useState(true);
     const db = getFirestore();
 
     function obtenerMesas() {
@@ -19,6 +21,7 @@ function Mesas() {
             let mesas = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
             mesas.sort((a, b) => a.numero - b.numero);
             setMesas(mesas);
+            setLoading(false);
         })
 
         return unsubscribe;
@@ -47,34 +50,34 @@ function Mesas() {
     async function cerrarMesa(id) {
         const db = getFirestore();
         const mesaRef = doc(db, 'mesas', id);
-        // await updateDoc(mesaRef, { estado: 'libre', horacierre: new Date().toLocaleTimeString(), dia: new Date().toLocaleDateString()});
-
+    
         const mesaSnap = await getDoc(mesaRef);
         const mesaData = mesaSnap.data();
     
         const comandasQuery = query(collection(db, 'comandas'), where('idMesa', '==', id));
         const comandasSnapshot = await getDocs(comandasQuery);
-
+    
         if (comandasSnapshot.empty) {
             await updateDoc(mesaRef, { estado: 'libre', horacierre: new Date().toLocaleTimeString(), dia: new Date().toLocaleDateString()});
-
+    
             return;
         }
     
-        await updateDoc(mesaRef, { estado: 'libre', horacierre: new Date().toLocaleTimeString(), dia: new Date().toLocaleDateString()});
-
-        const registroComandasRef = collection(db, 'registroMesas');
-
-        await addDoc(registroComandasRef, {
-            ...mesaData,
-            comandas: comandasSnapshot.docs.map(doc => doc.data()),
-            dia: new Date().toLocaleDateString()
+        await updateDoc(mesaRef, { estado: 'libre', dia: new Date().toLocaleDateString()})
+        .then(() => {
+            const registroComandasRef = collection(db, 'registroMesas');
+    
+            addDoc(registroComandasRef, {
+                ...mesaData,
+                comandas: comandasSnapshot.docs.map(doc => doc.data()),
+                horacierre: new Date().toLocaleTimeString(),
+                dia: new Date().toLocaleDateString()
+            }).then(() => {
+                for (const doc of comandasSnapshot.docs) {
+                    deleteDoc(doc.ref);
+                }
+            });
         });
-    
-        for (const doc of comandasSnapshot.docs) {
-            await deleteDoc(doc.ref);
-        }
-    
     }
 
     function crearComanda(id) {
@@ -88,16 +91,24 @@ function Mesas() {
         setMostrarCreacionComanda(false);
     }
 
-    function calcularCuenta(mesa, horaApertura, comandasPendientes) {
-        setPdfDocument(<PDF mesa={mesa} horaApertura={horaApertura} comandasPendientes={comandasPendientes} />);
-        console.log('Cuenta calculada');
+    function calcularCuenta(mesaActual, horaApertura, comandasPendientes) {
+        console.log(mesaActual);
+        setMesaActual(mesaActual);
+            setPdfDocument(<PDF mesa={mesaActual} horaApertura={horaApertura} comandasPendientes={comandasPendientes} />);
+            console.log('Cuenta calculada');
+        
     }
 
     return (
         <>
             <h1 className='text-center mt-3'>Mesas</h1>
+
             <div className='contenedor-principal'>
-                
+            {loading && 
+                <div className="spinner-border text-warning" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            }
                 {mesas.map((mesa) => (
                     <div key={mesa.id}>
                         <div className='mesa-info d-flex gap-3 align-items-center justify-content-center flex-wrap'>
@@ -117,15 +128,15 @@ function Mesas() {
                                         {mostrarComandasMesa ? 'Ocultar comandas' : 'Mostrar comandas'}
                                     </button>
 
-                                    {mostrarComandasMesa &&
+                                    { mostrarComandasMesa && 
                                         <div className="card">
                                             {comandasPendientes.map((comanda) => (comanda.idMesa === mesa.id &&
                                                 <div className="card-body" key={comanda.id}>
                                                     <h5 className="card-title">{comanda.estado}</h5>
                                                     <ul className="list-group list-group-flush">
-                                                        {comanda.productos.map((producto) => (
-                                                            <li className="list-group-item">{producto.nombre} {producto.cantidad} unidad/es</li>
-                                                        ))}
+                                                    {comanda.productos.map((producto, index) => (
+                                                        <li key={index} className="list-group-item">{producto.nombre} {producto.cantidad} unidad/es</li>
+                                                    ))}
                                                     </ul>
                                                 </div>
                                             ))}
@@ -141,10 +152,10 @@ function Mesas() {
                                         </div>
 
                                     }
-                                    <button type='button' className="btn btn-info" onClick={() => calcularCuenta(mesaActual, mesa.horaapertura, comandasPendientes)}>Calcular Cuenta</button>
-                                    {pdfDocument && (
+                                    <button type='button' className="btn btn-info" onClick={() => calcularCuenta(mesa.id, mesa.horaapertura, comandasPendientes)}>Calcular Cuenta</button>
+                                    {mesa.id == mesaActual && pdfDocument && (
                                         <>
-                                            <PDFDownloadLink document={pdfDocument} fileName="cuenta.pdf">
+                                            <PDFDownloadLink document={pdfDocument} fileName={"Mesa" + mesa.numero + " " + new Date().toLocaleTimeString()}>
                                               {({ loading }) => (loading ? 'Cargando documento...' : 'Descargar cuenta')}
                                             </PDFDownloadLink>
                                             <PDFViewer>

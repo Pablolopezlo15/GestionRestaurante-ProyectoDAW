@@ -6,6 +6,7 @@ import app from '../firebase';
 function CrearComanda({ idMesa, numeroMesa }) {
     const [comanda, setComanda] = useState([]);
     const [carta, setCarta] = useState([]);
+    const [loading, setLoading] = useState(true);
     const db = getFirestore();
 
 
@@ -21,6 +22,7 @@ function CrearComanda({ idMesa, numeroMesa }) {
             }
     
             setCarta(cartaData);
+            setLoading(false);
         };
     
         obtenerCarta();
@@ -69,8 +71,17 @@ function CrearComanda({ idMesa, numeroMesa }) {
         <div>
             <>
                 <h2>Elige los productos</h2>
+                <div className='d-flex justify-content-center'>
+                    {loading && 
+                        <div className="spinner-border text-warning" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    }
+                </div>
+
 
                 <div className="accordion carta" id="accordionExample">
+
                     {carta.map((item, index) => (
                         <div className="accordion-item" key={index}>
                             <h2 className="accordion-header" id={`heading${index}`}>

@@ -95,10 +95,9 @@ function PDF({ mesa, horaApertura, comandasPendientes }) {
                             ))
                         ))}
                     </View>
-                    <Text style={styles.text}>Total: {comandasPendientes.map((comanda) => (
-                        comanda.idMesa === mesa &&
-                        comanda.productos.reduce((acc, producto) => acc + (producto.precio * producto.cantidad), 0)
-                    ))}€</Text>
+                    <Text style={styles.text}>Total: {comandasPendientes.filter(comanda => comanda.idMesa === mesa).reduce((total, comanda) => {
+                        return total + comanda.productos.reduce((acc, producto) => acc + (producto.precio * producto.cantidad), 0);
+                    }, 0)}€</Text>
                 </View>
             </Page>
         </Document>

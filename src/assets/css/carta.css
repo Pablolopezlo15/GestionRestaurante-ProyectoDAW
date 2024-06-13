@@ -34,6 +34,7 @@
     
 }
 
+
 .producto{
     display: flex;
     align-items: center;
@@ -78,6 +79,12 @@
     .producto__imagen{
         min-width: 100px;
         width: 100%;
+    }
+
+    .producto-comanda{
+        display: flex;
+        flex-direction: column;
+        gap: 1vw;
     }
     
 }

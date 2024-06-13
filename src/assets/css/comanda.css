@@ -52,3 +52,11 @@
 .texto-azul {
     color: #007bff !important;
 }
+
+.comanda-registro{
+    background-color: whitesmoke;
+    color: var(--color-text);
+    padding: 10px;
+    border-radius: 10px;
+    border: var(--color-primary) 1px solid;
+}

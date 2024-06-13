@@ -7,6 +7,7 @@ function Comanda() {
     const [comandasPendientes, setComandasPendientes] = useState([]);
     const [mesaSeleccionada, setMesaSeleccionada] = useState('');
     const [mesas, setMesas] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const db = getFirestore();
 
@@ -24,6 +25,7 @@ function Comanda() {
             });
     
             setComandasPendientes(newComandas);
+            setLoading(false);
         });
     
         return unsubscribe;
@@ -66,6 +68,11 @@ function Comanda() {
 
                 <div className='d-flex justify-content-center gap-2 mt-3'>
                     <h1>Comandas</h1>
+                    {loading && 
+                        <div className="spinner-border text-warning" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    }
                     <select className='form-select select-mesas' value={mesaSeleccionada} onChange={(e) => setMesaSeleccionada(e.target.value)}>
                         <option value="">Todas las mesas</option>
                         {mesas.sort((a, b) => a.numero - b.numero).map((mesa, index) => (

@@ -24,6 +24,7 @@ import Comanda from './Components/Comanda';
 import GestionarCarta from './Components/GestionarCarta';
 import GestionarUsuarios from './Components/GestionarUsuarios';
 import GestionarMesas from './Components/GestionarMesas';
+import RegistroMesas from './Components/RegistroMesas';
 
 import PrivateRoute from './Components/PrivateRoute';
 
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
       {
         path: "gestionarmesas",
         element: <PrivateRoute Component={GestionarMesas} />,
+      },
+      {
+        path: "registromesas",
+        element: <PrivateRoute Component={RegistroMesas} />,
       }
     ],
   },

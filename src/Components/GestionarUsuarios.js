@@ -92,7 +92,6 @@ function GestionarUsuarios() {
                                         </select>
                                     </td>
                                     <td className='d-flex flex-column gap-2'>
-                                        {/* <button className="btn btn-warning w-100" >Editar</button> */}
                                         <button className="btn btn-outline-danger w-100" onClick={() => borrarUsuario(usuario.id)}>Eliminar</button>
                                     </td>
                                 </tr>
