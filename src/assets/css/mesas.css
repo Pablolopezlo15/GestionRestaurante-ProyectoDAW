@@ -44,3 +44,7 @@
     border: none;
     cursor: pointer;
 }
+
+.pdf{
+    min-height: 350px;
+}

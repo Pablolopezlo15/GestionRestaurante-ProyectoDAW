@@ -25,6 +25,7 @@ import GestionarCarta from './Components/GestionarCarta';
 import GestionarUsuarios from './Components/GestionarUsuarios';
 import GestionarMesas from './Components/GestionarMesas';
 import RegistroMesas from './Components/RegistroMesas';
+import Error404 from './Components/Error404';
 
 import PrivateRoute from './Components/PrivateRoute';
 
@@ -78,7 +79,11 @@ const router = createBrowserRouter([
       {
         path: "registromesas",
         element: <PrivateRoute Component={RegistroMesas} />,
-      }
+      },
+      {
+        path: "*",
+        element: <Error404 />,
+      },
     ],
   },
 ]);

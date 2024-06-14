@@ -162,12 +162,34 @@ function Mesas() {
                                     <button type='button' className="btn btn-info" onClick={() => calcularCuenta(mesa.id, mesa.dia, mesa.horaapertura, comandasPendientes, user.displayName )}>Calcular Cuenta</button>
                                     {mesa.id == mesaActual && pdfDocument && (
                                         <>
-                                            <PDFDownloadLink document={pdfDocument} fileName={"Mesa" + mesa.numero + " " + new Date().toLocaleTimeString()}>
+                                            <div className="modal fade" id={`modal${mesa.id}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div className="modal-dialog">
+                                                    <div className="modal-content">
+                                                        <div className="modal-header">
+                                                            <h5 className="modal-title" id="exampleModalLabel">Cuenta de la mesa {mesa.numero}</h5>
+                                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setPdfDocument(null)}></button>
+                                                        </div>
+                                                        <div className="modal-body">
+                                                            <PDFViewer className='w-100 pdf'>
+                                                                {pdfDocument}
+                                                            </PDFViewer>
+                                                        </div>
+                                                        <div className="modal-footer">
+                                                            <PDFDownloadLink className="btn btn-primary" document={pdfDocument} fileName={"Mesa" + mesa.numero + " " + new Date().toLocaleTimeString()}>
+                                                                {({ blob, url, loading, error }) => (loading ? 'Cargando documento...' : 'Descargar cuenta')}
+                                                            </PDFDownloadLink>
+                                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setPdfDocument(null)}>Cerrar</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" className="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target={`#modal${mesa.id}`}>Ver cuenta</button>
+                                            {/* <PDFDownloadLink document={pdfDocument} fileName={"Mesa" + mesa.numero + " " + new Date().toLocaleTimeString()}>
                                               {({ loading }) => (loading ? 'Cargando documento...' : 'Descargar cuenta')}
                                             </PDFDownloadLink>
                                             <PDFViewer>
                                               {pdfDocument}
-                                            </PDFViewer>
+                                            </PDFViewer> */}
                                         </>
                                     )}
                                 </>

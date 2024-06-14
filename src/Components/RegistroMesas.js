@@ -139,7 +139,7 @@ function RegistroMesas() {
                                                     </div>
 
                                                     { pdfDocument &&
-                                                        <PDFViewer>
+                                                        <PDFViewer className='pdf'>
                                                             {pdfDocument}
                                                         </PDFViewer>
                                                     }

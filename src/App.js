@@ -74,14 +74,115 @@ function App() {
                     </div>
                 </section>
 
+                <section className='d-flex justify-content-center align-items-center flex-column mb-5'>
+                    <h2>Nuestros mejores platos</h2>
+                    <div className='d-flex gap-2 flex-wrap justify-content-center align-items-center mt-5'>
+                        <div className="card">
+                          <div className="content">
+                            <div className="back">
+                              <div className="back-content">
+
+                                <strong>Hover Me</strong>
+                              </div>
+                            </div>
+                            <div className="front">
+
+                              <div className="img">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/patatas-cheese-bacon-foto-principal.jpg?alt=media&token=f68b630f-412c-45b6-ad48-5473a00e809b" alt="" />
+                              </div>
+
+                              <div className="front-content">
+                                <small className="badge">Pasta</small>
+                                <div className="description">
+                                  <div className="title">
+                                    <p className="title">
+                                      <strong>Spaguetti Bolognese</strong>
+                                    </p>
+                                  </div>
+                                  <p className="card-footer">
+                                    30 Mins &nbsp; | &nbsp; 1 Serving
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="card">
+                          <div className="content">
+                            <div className="back">
+                              <div className="back-content">
+                            
+                                <strong>Hover Me</strong>
+                              </div>
+                            </div>
+                            <div className="front">
+                            
+                              <div className="img">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/patatas-cheese-bacon-foto-principal.jpg?alt=media&token=f68b630f-412c-45b6-ad48-5473a00e809b" alt="" />
+                              </div>
+                            
+                              <div className="front-content">
+                                <small className="badge">Pasta</small>
+                                <div className="description">
+                                  <div className="title">
+                                    <p className="title">
+                                      <strong>Spaguetti Bolognese</strong>
+                                    </p>
+                                  </div>
+                                  <p className="card-footer">
+                                    30 Mins &nbsp; | &nbsp; 1 Serving
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="card">
+                          <div className="content">
+                            <div className="back">
+                              <div className="back-content">
+                            
+                                <strong>Hover Me</strong>
+                              </div>
+                            </div>
+                            <div className="front">
+                            
+                              <div className="img">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/patatas-cheese-bacon-foto-principal.jpg?alt=media&token=f68b630f-412c-45b6-ad48-5473a00e809b" alt="" />
+                              </div>
+                            
+                              <div className="front-content">
+                                <small className="badge">Pasta</small>
+                                <div className="description">
+                                  <div className="title">
+                                    <p className="title">
+                                      <strong>Spaguetti Bolognese</strong>
+                                    </p>
+                                  </div>
+                                  <p className="card-footer">
+                                    30 Mins &nbsp; | &nbsp; 1 Serving
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                
+                </section>
+
                 <section className='text-center'>
                     <h2>Contacta con Nosotros</h2>
                     <div className="contact-section">
+
                         <div className="contact-info">
                             <p><strong>Dirección:</strong> C/ Recogidas, Granada, España</p>
                             <p><strong>Teléfono:</strong> +34 900 00 00 00</p>
                             <p><strong>Email:</strong> <a href="mailto:plopezlozano12@gmail.com">plopezlozano12@gmail.com</a></p>
-                            </div>
+                        </div>
+
                         <div id="map">
                             <MapContainer center={[37.1773363, -3.5985571]} zoom={13} style={{ height: "400px", width: "100%" }}>
                                 <TileLayer

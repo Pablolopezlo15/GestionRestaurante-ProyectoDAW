@@ -67,6 +67,24 @@
     max-width: 350px;
     width: 100%;
 }
+.form-edit-categoria button{
+    width: 250px;
+}
+
+@media screen and (max-width: 768px) {
+    .form-edit-categoria{
+        display: flex;
+        flex-direction: column;
+        gap: 1vw;
+    }
+    .form-edit-categoria input{
+        width: 100%;
+    }
+    .form-edit-categoria button{
+        width: 100%;
+    }
+    
+}
 
 @media screen and (max-width: 500px) {
     .producto{

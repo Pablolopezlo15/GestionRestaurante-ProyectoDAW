@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -18,12 +17,11 @@ function GestionarCarta() {
     const [isFormVisibleCategory, setIsFormVisibleCategory] = useState(false);
     const [newProduct, setNewProduct] = useState({ nombre: '', precio: '', ingredientes: '', imagen: '' });
     const [categoria, setCategoria] = useState('');
-    const [categoriaElegida, setCategoriaElegida] = useState({ categoria: '' });
+    const [categoriaElegida, setCategoriaElegida] = useState('');
+    const [categoriaEditing, setCategoriaEditing] = useState(null);
     const [editingProduct, setEditingProduct] = useState(null);
     const [nuevaCategoria, setNuevaCategoria] = useState('');
-
     const [loading, setLoading] = useState(true);
-
 
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));
@@ -69,41 +67,20 @@ function GestionarCarta() {
 
         setCarta(cartaData);
         setLoading(false);
-
     }
-
 
     useEffect(() => {
         obtenerCarta();
     }, []);
 
-
-    // const handleDelete = async (id, categoria) => {
-    //     console.log(id, categoria);
-    //     await deleteDoc(doc(db, "carta", categoria, "productos", id));
-    //     obtenerCarta();
-    // }
-
     async function eliminarProductoDeCarta(id, categoria) {
-        console.log(id, categoria);
         await deleteDoc(doc(db, "carta", categoria, "productos", id));
         obtenerCarta();
     }
 
-    // const handleAddProduct = async (e) => {
-    //     e.preventDefault();
-    //     if (typeof categoriaElegida !== 'string') {
-    //         alert('Por favor, selecciona una categoría antes de añadir un producto.');
-    //         return;
-    //     }
-    //     await addDoc(collection(db, "carta", categoriaElegida, "productos"), newProduct);
-    //     setIsFormVisible(false);
-    //     obtenerCarta();
-    // }
-
     async function agregarProductoACarta(e) {
         e.preventDefault();
-        if (typeof categoriaElegida !== 'string') {
+        if (categoriaElegida === '') {
             alert('Por favor, selecciona una categoría antes de añadir un producto.');
             return;
         }
@@ -112,13 +89,6 @@ function GestionarCarta() {
         obtenerCarta();
     }
 
-    // const handleAddCategoria = async (e) => {
-    //     e.preventDefault();
-    //     await addDoc(collection(db, "carta"), { categoria: nuevaCategoria });
-    //     setIsFormVisibleCategory(false);
-    //     obtenerCarta();
-    // }
-
     async function agregarNuevaCategoria(e) {
         e.preventDefault();
         await addDoc(collection(db, "carta"), { categoria: nuevaCategoria });
@@ -126,57 +96,33 @@ function GestionarCarta() {
         obtenerCarta();
     }
 
-    // const handleEdit = (id, producto) => {
-    //     if (esVisibleFormEditar == false) {
-    //         setEsVisibleFormEditar(true);
-    //     } else {
-    //         setEsVisibleFormEditar(false);
-    //     }
-    //     setEditingProduct(producto);
-    // }
-
     function editarProducto(id, producto) {
-        if (esVisibleFormEditar == false) {
-            setEsVisibleFormEditar(true);
-        } else {
-            setEsVisibleFormEditar(false);
-        }
+        setEsVisibleFormEditar(!esVisibleFormEditar);
         setEditingProduct(producto);
     }
 
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     console.log(editingProduct);
-    
-    //     if(editingProduct.imagen === '') {
-    //         editingProduct.imagen = newProduct.imagen;
-    //     }
-    
-    //     await updateDoc(doc(db, "carta", editingProduct.categoria, "productos", editingProduct.id), editingProduct);
-    //     setEditingProduct(null);
-    
-    //     obtenerCarta();
-    //     setEsVisibleFormEditar(false);
-    // }
+    function editarCategoria(id, categoria) {
+        setCategoriaEditing(id);
+        setCategoria(categoria);
+    }
 
     async function saveEditarProducto(e) {
         e.preventDefault();
-        console.log(editingProduct);
-
-        if(editingProduct.imagen === '') {
+        if (editingProduct.imagen === '') {
             editingProduct.imagen = newProduct.imagen;
         }
-
         await updateDoc(doc(db, "carta", editingProduct.categoria, "productos", editingProduct.id), editingProduct);
         setEditingProduct(null);
-
         obtenerCarta();
         setEsVisibleFormEditar(false);
-
     }
 
-        
+    async function saveEditarCategoria(e) {
+        e.preventDefault();
+        await updateDoc(doc(db, "carta", categoriaEditing), { categoria });
+        setCategoriaEditing(null);
+        obtenerCarta();
+    }
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
@@ -187,15 +133,13 @@ function GestionarCarta() {
         uploadTask.on('state_changed', 
             (snapshot) => {
                 // Proccessing...
-                console.log(snapshot);
-                console.log(storageRef)
             }, 
             (error) => {
                 // Handle unsuccessful uploads
             }, 
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    if(editingProduct) {
+                    if (editingProduct) {
                         setEditingProduct({ ...editingProduct, imagen: downloadURL });
                     } else {
                         setNewProduct({ ...newProduct, imagen: downloadURL });
@@ -203,6 +147,11 @@ function GestionarCarta() {
                 });
             }
         );
+    }
+
+    async function eliminarCategoria(id) {
+        await deleteDoc(doc(db, "carta", id));
+        obtenerCarta();
     }
 
     return (
@@ -216,7 +165,6 @@ function GestionarCarta() {
                 }
             </div>
             <div className="container">
-
                 {isAdmin && (
                     <>
                         <div>
@@ -250,7 +198,6 @@ function GestionarCarta() {
                                                     <option key={item.id} value={item.id}>{item.categoria}</option>
                                                 ))}
                                             </select>
-
                                         </label>
                                         <label>
                                             Nombre:
@@ -266,79 +213,99 @@ function GestionarCarta() {
                                         </label>
                                         <label>
                                             Imagen:
-                                            <input type="file" value={newProduct.imagen} onChange={handleImageUpload} />
+                                            <input type="file" onChange={handleImageUpload} />
                                         </label>
                                         <button className='button1' type="submit">Crear producto</button>
                                     </form>
                                 </div>
                             )}
 
-
                             <div className="accordion carta" id="accordionExample">
-                                {
-                                    carta.map((item, index) => (
-                                        <div className="accordion-item" key={item.id}>
-                                            <h2 className="accordion-header" id={`heading${index}`}>
-                                                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${index}`} aria-expanded="true" aria-controls={`collapse${index}`}>
-                                                    {item.categoria}
-                                                </button>
-                                            </h2>
-                                            <div id={`collapse${index}`} className="accordion-collapse collapse" aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
-                                                <div className="accordion-body">
-                                                    {item.productos && item.productos.map(producto => (
-                                                        <div key={producto.id} className="producto">
-                                                            <div className="producto__imagen">
-                                                                {!producto.imagen && 
-                                                                <img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/imagenotfound.jpg?alt=media&token=d53941ce-18b4-4f99-bdea-85e6f86943a9" alt={producto.nombre} />}
-                                                                {producto.imagen && 
-                                                                <img src={producto.imagen} alt={producto.nombre} />
-                                                                }
-                                                            </div>
-                                                            <div className="producto__info">
-                                                                <h2>{producto.nombre}</h2>
-                                                                <p><strong>Precio: </strong>{producto.precio} €</p>
-                                                                <p><strong>Ingredientes: </strong>{producto.ingredientes}</p>
-                                                                <div className='d-flex flex-column gap-2'>
-                                                                    <p><strong>Acciones: </strong></p>
-                                                                    <button className='btn btn-outline-warning' onClick={() => editarProducto(producto.id, { ...producto, categoria: item.id })}>Editar</button>
-
-                                                                    {editingProduct && producto.id === editingProduct.id && esVisibleFormEditar && (
-                                                                        <form className='form form-edit-producto' onSubmit={saveEditarProducto}>
-                                                                            <label>Nombre:
-                                                                                <input type="text" value={editingProduct.nombre} onChange={(e) => setEditingProduct({ ...editingProduct, nombre: e.target.value })} />               
-                                                                            </label>
-                                                                            <label>Precio (€):
-                                                                                <input type="number" value={editingProduct.precio} onChange={(e) => setEditingProduct({ ...editingProduct, precio: e.target.value })} />
-                                                                            </label>
-                                                                            <label>Ingredientes:
-                                                                                <textarea type="text" value={editingProduct.ingredientes} onChange={(e) => setEditingProduct({ ...editingProduct, ingredientes: e.target.value })} />
-                                                                            </label>
-                                                                            <label>Imagen:
-                                                                                <input type="file" onChange={handleImageUpload} />
-                                                                            </label>
-                                                                            <button type="submit" className='button1'>Guardar cambios</button>
-                                                                        </form>
-                                                                    )}
-                                                                    <button className='btn btn-outline-danger' onClick={() => eliminarProductoDeCarta(producto.id, item.id)}>Eliminar</button>
-                                                                </div>
-
-                                                            </div>                                                
+                                {carta.map((item, index) => (
+                                    <div className="accordion-item" key={item.id}>
+                                        <h2 className="accordion-header" id={`heading${index}`}>
+                                            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${index}`} aria-expanded="true" aria-controls={`collapse${index}`}>
+                                                {item.categoria}
+                                            </button>
+                                        </h2>
+                                        <div id={`collapse${index}`} className="accordion-collapse collapse" aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
+                                            <div className="accordion-body">
+                                                {item.productos && item.productos.map(producto => (
+                                                    <div key={producto.id} className="producto">
+                                                        <div className="producto__imagen">
+                                                            {!producto.imagen && 
+                                                            <img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/imagenotfound.jpg?alt=media&token=d53941ce-18b4-4f99-bdea-85e6f86943a9" alt={producto.nombre} />}
+                                                            {producto.imagen && 
+                                                            <img src={producto.imagen} alt={producto.nombre} />
+                                                            }
                                                         </div>
-                                                    ))}
-                                                </div>
+                                                        <div className="producto__info">
+                                                            <h2>{producto.nombre}</h2>
+                                                            <p><strong>Precio: </strong>{producto.precio} €</p>
+                                                            <p><strong>Ingredientes: </strong>{producto.ingredientes}</p>
+                                                            <div className='d-flex flex-column gap-2'>
+                                                                <p><strong>Acciones: </strong></p>
+                                                                <button className='btn btn-outline-warning' onClick={() => editarProducto(producto.id, { ...producto, categoria: item.id })}>Editar</button>
+                                                                {editingProduct && producto.id === editingProduct.id && esVisibleFormEditar && (
+                                                                    <form className='form form-edit-producto' onSubmit={saveEditarProducto}>
+                                                                        <label>Nombre:
+                                                                            <input type="text" value={editingProduct.nombre} onChange={(e) => setEditingProduct({ ...editingProduct, nombre: e.target.value })} />               
+                                                                        </label>
+                                                                        <label>Precio (€):
+                                                                            <input type="number" value={editingProduct.precio} onChange={(e) => setEditingProduct({ ...editingProduct, precio: e.target.value })} />
+                                                                        </label>
+                                                                        <label>Ingredientes:
+                                                                            <textarea type="text" value={editingProduct.ingredientes} onChange={(e) => setEditingProduct({ ...editingProduct, ingredientes: e.target.value })} />
+                                                                        </label>
+                                                                        <label>Imagen:
+                                                                            <input type="file" onChange={handleImageUpload} />
+                                                                        </label>
+                                                                        <button type="submit" className='button1'>Guardar cambios</button>
+                                                                    </form>
+                                                                )}
+                                                                <button className='btn btn-outline-danger' onClick={() => eliminarProductoDeCarta(producto.id, item.id)}>Eliminar</button>
+                                                            </div>
+                                                        </div>                                                
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
-                                    ))
-                                }
-
+                                    </div>
+                                ))}
                             </div>
+                        </div>
+                        <div className='d-flex justify-content-center flex-column align-items-center mt-5 mb-5'>
+                            <h2>Categorías</h2>
+                            <ul className="list-group w-75">
+                                {carta.map((item) => (
+                                    <li key={item.id} className="list-group-item d-flex justify-content-between align-items-center">
+                                        {categoriaEditing === item.id ? (
+                                            <form className='form form-edit-producto w-100 justify-content-center align-items-center' onSubmit={saveEditarCategoria}>
+                                                <div className="d-flex gap-2 w-100 form-edit-categoria">
+                                                    <input type="text" value={categoria} onChange={(e) => setCategoria(e.target.value)} />
+                                                    <button type="submit" className='btn btn-primario'>Guardar cambios</button>
+                                                </div>
+                                            </form>
+                                        ) : (
+                                            <>
+                                                <span>{item.categoria}</span>
+                                                <div>
+                                                    <button className='btn btn-outline-warning btn-sm me-2' onClick={() => editarCategoria(item.id, item.categoria)}>Editar</button>
+                                                    <button className='btn btn-outline-danger btn-sm' onClick={() => eliminarCategoria(item.id)}>Eliminar</button>
+                                                </div>
+                                            </>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+
                         </div>
                     </>
                 )}
                 {!isAdmin && <p>No tienes permisos para acceder a esta página</p>}
             </div>
         </div>
-    )
+    );
 }
 
 export default GestionarCarta;

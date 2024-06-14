@@ -94,10 +94,11 @@ function PDFenRegistro({ mesa, dia, horaApertura, comandasPendientes, usuario })
                         </View>
                     </View>
                     <View style={styles.barraHorizontal} />
-
                     <Text style={styles.text}>Atendido por: {usuario}</Text>
                     <Text style={styles.text}>Fecha: {new Date().toLocaleDateString()} - {new Date().toLocaleTimeString()}</Text>
                     <Text style={styles.text}>Hora de apertura: {horaApertura} - {dia}</Text>
+                    <View style={styles.barraHorizontal} />
+
                     <View style={styles.table}>
                         <View style={styles.tableRow}>
                             <Text style={styles.tableColHeader}>Producto</Text>
@@ -116,6 +117,8 @@ function PDFenRegistro({ mesa, dia, horaApertura, comandasPendientes, usuario })
                           ))
                         ))}
                     </View>
+                    <View style={styles.barraHorizontal} />
+
                     <Text style={styles.textTotal}>Total (Impuestos Incluidos): 
                       {comandasPendientes.reduce((total, comanda) => {
                           return total + comanda.productos.reduce((acc, producto) => acc + (parseFloat(producto.precio) * producto.cantidad), 0);
