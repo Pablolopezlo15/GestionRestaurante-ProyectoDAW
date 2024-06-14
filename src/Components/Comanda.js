@@ -12,17 +12,16 @@ function Comanda() {
     const db = getFirestore();
 
 
-    const obtenerComandasPendientes = () => {
+    function obtenerComandasPendientes() {
         const q = query(collection(db, 'comandas'));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const newComandas = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    
             setComandasPendientes(newComandas);
             setLoading(false);
         });
     
         return unsubscribe;
-    };
+    }
 
     useEffect(() => {
 
@@ -46,8 +45,6 @@ function Comanda() {
         console.log('Listo');
         updateDoc(doc(db, 'comandas', idComanda), { estado: 'Listo', hora: new Date().toLocaleTimeString()});
 
-        // let audio = new Audio('./audio/notificacion.mp3');
-        // audio.play();
     }
 
     function entregado(idComanda) {

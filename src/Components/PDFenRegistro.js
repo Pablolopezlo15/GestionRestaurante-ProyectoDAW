@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     },
 });
 
-function PDF({ mesa, dia, horaApertura, comandasPendientes, usuario }) {
+function PDFenRegistro({ mesa, dia, horaApertura, comandasPendientes, usuario }) {
     return (
         <Document>
             <Page size={[80 * 2.83465, 'auto']} style={styles.page}>
@@ -105,21 +105,21 @@ function PDF({ mesa, dia, horaApertura, comandasPendientes, usuario }) {
                             <Text style={styles.tableColHeader}>Precio</Text>
                             <Text style={styles.tableColHeader}>Importe</Text>
                         </View>
-                        {comandasPendientes.map((comanda) => (
-                            comanda.idMesa === mesa &&
-                            comanda.productos.map((producto) => (
-                                <View style={styles.tableRow}>
-                                    <Text style={styles.tableCol}>{producto.nombre}</Text>
-                                    <Text style={styles.tableCol}>{producto.cantidad}</Text>
-                                    <Text style={styles.tableCol}>{parseFloat(producto.precio).toFixed(2).replace('.', ',')}€</Text>
-                                    <Text style={styles.tableCol}>{(parseFloat(producto.precio) * producto.cantidad).toFixed(2).replace('.', ',')}€</Text>                              </View>
-                            ))
+                        {comandasPendientes.map((comanda, comandaIndex) => (
+                          comanda.productos.map((producto, productoIndex) => (
+                            <View key={`comanda-${comandaIndex}-producto-${productoIndex}`} style={styles.tableRow}>
+                              <Text style={styles.tableCol}>{producto.nombre}</Text>
+                              <Text style={styles.tableCol}>{producto.cantidad}</Text>
+                              <Text style={styles.tableCol}>{parseFloat(producto.precio).toFixed(2).replace('.', ',')}€</Text>
+                              <Text style={styles.tableCol}>{(parseFloat(producto.precio) * producto.cantidad).toFixed(2).replace('.', ',')}€</Text>
+                            </View>
+                          ))
                         ))}
                     </View>
                     <Text style={styles.textTotal}>Total (Impuestos Incluidos): 
-                        {comandasPendientes.filter(comanda => comanda.idMesa === mesa).reduce((total, comanda) => {
-                            return total + comanda.productos.reduce((acc, producto) => acc + (parseFloat(producto.precio) * producto.cantidad), 0);
-                        }, 0).toFixed(2).replace('.', ',')}€
+                      {comandasPendientes.reduce((total, comanda) => {
+                          return total + comanda.productos.reduce((acc, producto) => acc + (parseFloat(producto.precio) * producto.cantidad), 0);
+                      }, 0).toFixed(2).replace('.', ',')}€
                     </Text>
                 </View>
             </Page>
@@ -127,4 +127,4 @@ function PDF({ mesa, dia, horaApertura, comandasPendientes, usuario }) {
     );
 }
 
-export default PDF;
+export default PDFenRegistro;

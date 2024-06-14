@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { getFirestore, collection, getDocs, setDoc, updateDoc, doc, onSnapshot, addDoc, getDoc, deleteDoc, where, query } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import CrearComanda from './CrearComanda';
 import PDF from './PDF';
 import { PDFDownloadLink, PDFViewer  } from '@react-pdf/renderer';
 
 function Mesas() {
+    const [user, setUser] = useState();
+
     const [mesaActual, setMesaActual] = useState(null);
     const [mesas, setMesas] = useState([]);
     const [carta, setCarta] = useState([{}]);
@@ -15,6 +18,8 @@ function Mesas() {
 
     const [loading, setLoading] = useState(true);
     const db = getFirestore();
+    const auth = getAuth();
+
 
     function obtenerMesas() {
         const unsubscribe = onSnapshot(collection(db, 'mesas'), (snapshot) => {
@@ -39,6 +44,8 @@ function Mesas() {
     useEffect(() => {
         obtenerMesas();
         obtenerComandasPendientes();
+        setUser(auth.currentUser);
+
     }, []);
 
     function abrirMesa(id) {
@@ -91,10 +98,10 @@ function Mesas() {
         setMostrarCreacionComanda(false);
     }
 
-    function calcularCuenta(mesaActual, horaApertura, comandasPendientes) {
-        console.log(mesaActual);
+    function calcularCuenta(mesaActual, dia, horaApertura, comandasPendientes, usuario) {
+        console.log(comandasPendientes);
         setMesaActual(mesaActual);
-            setPdfDocument(<PDF mesa={mesaActual} horaApertura={horaApertura} comandasPendientes={comandasPendientes} />);
+            setPdfDocument(<PDF mesa={mesaActual} dia={dia} horaApertura={horaApertura} comandasPendientes={comandasPendientes} usuario={usuario} />);
             console.log('Cuenta calculada');
         
     }
@@ -152,7 +159,7 @@ function Mesas() {
                                         </div>
 
                                     }
-                                    <button type='button' className="btn btn-info" onClick={() => calcularCuenta(mesa.id, mesa.horaapertura, comandasPendientes)}>Calcular Cuenta</button>
+                                    <button type='button' className="btn btn-info" onClick={() => calcularCuenta(mesa.id, mesa.dia, mesa.horaapertura, comandasPendientes, user.displayName )}>Calcular Cuenta</button>
                                     {mesa.id == mesaActual && pdfDocument && (
                                         <>
                                             <PDFDownloadLink document={pdfDocument} fileName={"Mesa" + mesa.numero + " " + new Date().toLocaleTimeString()}>

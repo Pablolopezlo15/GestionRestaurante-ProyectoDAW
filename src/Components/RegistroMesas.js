@@ -3,6 +3,8 @@ import { getFirestore, collection, addDoc, getDocs, where, query, onSnapshot } f
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 
+import PDF from './PDFenRegistro';
+import { PDFDownloadLink, PDFViewer  } from '@react-pdf/renderer';
 
 function RegistroMesas() {
     const auth = getAuth(app);
@@ -13,6 +15,9 @@ function RegistroMesas() {
     const [loading, setLoading] = useState(false);
     const [mesas, setMesas] = useState([]);
     const [numeroMesa, setNumeroMesa] = useState();
+
+    const [pdfDocument, setPdfDocument] = useState(null);
+
 
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));
@@ -64,6 +69,11 @@ function RegistroMesas() {
         return unsubscribe;
     }
 
+    function calcularCuenta(mesa, dia, horaApertura, comandasPendientes, usuario) {
+        console.log(comandasPendientes)
+        setPdfDocument(<PDF mesaActual={mesa} dia={dia} horaApertura={horaApertura} comandasPendientes={comandasPendientes} usuario={usuario} />);
+    }
+
     return(
         <div className='d-flex flex-column w-100 justify-content-center align-items-center'>
             {isAdmin && (
@@ -100,43 +110,55 @@ function RegistroMesas() {
                             </thead>
                             <tbody>
                             {mesas.filter(mesa => numeroMesa ? mesa.numero == numeroMesa : true).map((mesa) => (
-    <tr key={mesa.id}>
-        <td>{mesa.numero}</td>
-        <td>{mesa.horaapertura}</td>
-        <td>{mesa.horacierre}</td>
-        <td>
-            <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target={`#modal${mesa.id}`}>Ver comandas</button>
+                                <tr key={mesa.id}>
+                                    <td>{mesa.numero}</td>
+                                    <td>{mesa.horaapertura}</td>
+                                    <td>{mesa.horacierre}</td>
+                                    <td>
+                                        <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target={`#modal${mesa.id}`}>Ver comandas</button>
 
-            <div className="modal fade" id={`modal${mesa.id}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Comandas de la mesa {mesa.numero}</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
+                                        <div className="modal fade" id={`modal${mesa.id}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="exampleModalLabel">Comandas de la mesa {mesa.numero}</h5>
+                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setPdfDocument(null)}></button>
+                                                    </div>
 
-                        <div className="modal-body d-flex flex-column gap-1">
-                            {mesa.comandas.map((comanda) => (
-                                <div key={comanda.id} className='comanda-registro'>
-                                    <p>Hora de la comanda: {comanda.horacreacion}</p>
-                                    {comanda.productos.map((producto) => (
-                                        <div key={producto.id}>
-                                            <p>{producto.nombre} -- {producto.cantidad} unidad/es</p>
+                                                    <div className="modal-body d-flex flex-column gap-1">
+                                                        {mesa.comandas.map((comanda) => (
+                                                            <div key={comanda.id} className='comanda-registro'>
+                                                                <p>Hora de la comanda: {comanda.horacreacion}</p>
+                                                                {comanda.productos.map((producto) => (
+                                                                    <div key={producto.id}>
+                                                                        <p>{producto.nombre} -- {producto.cantidad} unidad/es</p>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+
+                                                    { pdfDocument &&
+                                                        <PDFViewer>
+                                                            {pdfDocument}
+                                                        </PDFViewer>
+                                                    }
+                                                    
+                                                    <div className="modal-footer">
+                                                        { pdfDocument &&
+                                                                <PDFDownloadLink className="btn btn-primary" document={pdfDocument} fileName={`CuentaMesa${mesa.numero}.pdf`}>
+                                                                    {({ blob, url, loading, error }) => (loading ? 'Cargando documento...' : 'Descargar cuenta')}
+                                                                </PDFDownloadLink>
+                                                        }
+                                                        <button type="button" className="btn btn-secondary" onClick={() => calcularCuenta(mesa, mesa.dia, mesa.horaapertura, mesa.comandas, user.displayName)}>Sacar cuenta</button>
+                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setPdfDocument(null)}>Cerrar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    ))}
-                                </div>
+                                    </td>
+                                </tr>
                             ))}
-                        </div>
-                        
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </td>
-    </tr>
-))}
 
                             </tbody>
                         </table>

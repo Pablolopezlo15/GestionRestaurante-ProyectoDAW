@@ -27,12 +27,12 @@ function Cabecera() {
             if (user) {
                 comprobarRol(user);
                 obtenerNumeroComandasPendientes();
-
+    
                 const unsubscribeSnapshot = onSnapshot(collection(db, "users"), (snapshot) => {
                     snapshot.docChanges().forEach((change) => {
-                        if (change.type === "modified" && change.doc.data().uid === user.uid) {
+                        if (change.doc.data().uid === user.uid) {
                             setIsAdmin(change.doc.data().rol === 'admin');
-                            if (change.doc.data().estado === 'inactivo' && change.doc.data().uid === user.uid) {
+                            if (change.type === "modified" && change.doc.data().estado === 'inactivo') {
                                 cerrarSesion();
                             }
                         }
@@ -45,9 +45,7 @@ function Cabecera() {
                 }
             }
         });
-
-        return () => unsubscribe();
-    }, [auth]);
+    }, [auth, db]);
 
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));

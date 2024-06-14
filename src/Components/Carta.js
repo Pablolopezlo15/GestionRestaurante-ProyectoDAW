@@ -9,7 +9,7 @@ function Carta() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchData() {
+        async function obtenerCarta() {
             const db = getFirestore();
             const data = await getDocs(collection(db, "carta"));
             const cartaData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
@@ -24,7 +24,7 @@ function Carta() {
 
             console.log(carta);
         }
-        fetchData();
+        obtenerCarta();
     }, []);
 
     return (

@@ -78,13 +78,30 @@ function GestionarCarta() {
     }, []);
 
 
-    const handleDelete = async (id, categoria) => {
+    // const handleDelete = async (id, categoria) => {
+    //     console.log(id, categoria);
+    //     await deleteDoc(doc(db, "carta", categoria, "productos", id));
+    //     obtenerCarta();
+    // }
+
+    async function eliminarProductoDeCarta(id, categoria) {
         console.log(id, categoria);
         await deleteDoc(doc(db, "carta", categoria, "productos", id));
         obtenerCarta();
     }
 
-    const handleAddProduct = async (e) => {
+    // const handleAddProduct = async (e) => {
+    //     e.preventDefault();
+    //     if (typeof categoriaElegida !== 'string') {
+    //         alert('Por favor, selecciona una categoría antes de añadir un producto.');
+    //         return;
+    //     }
+    //     await addDoc(collection(db, "carta", categoriaElegida, "productos"), newProduct);
+    //     setIsFormVisible(false);
+    //     obtenerCarta();
+    // }
+
+    async function agregarProductoACarta(e) {
         e.preventDefault();
         if (typeof categoriaElegida !== 'string') {
             alert('Por favor, selecciona una categoría antes de añadir un producto.');
@@ -95,14 +112,30 @@ function GestionarCarta() {
         obtenerCarta();
     }
 
-    const handleAddCategoria = async (e) => {
+    // const handleAddCategoria = async (e) => {
+    //     e.preventDefault();
+    //     await addDoc(collection(db, "carta"), { categoria: nuevaCategoria });
+    //     setIsFormVisibleCategory(false);
+    //     obtenerCarta();
+    // }
+
+    async function agregarNuevaCategoria(e) {
         e.preventDefault();
         await addDoc(collection(db, "carta"), { categoria: nuevaCategoria });
         setIsFormVisibleCategory(false);
         obtenerCarta();
     }
 
-    const handleEdit = (id, producto) => {
+    // const handleEdit = (id, producto) => {
+    //     if (esVisibleFormEditar == false) {
+    //         setEsVisibleFormEditar(true);
+    //     } else {
+    //         setEsVisibleFormEditar(false);
+    //     }
+    //     setEditingProduct(producto);
+    // }
+
+    function editarProducto(id, producto) {
         if (esVisibleFormEditar == false) {
             setEsVisibleFormEditar(true);
         } else {
@@ -112,20 +145,38 @@ function GestionarCarta() {
     }
 
 
-    const handleSubmit = async (e) => {
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     console.log(editingProduct);
+    
+    //     if(editingProduct.imagen === '') {
+    //         editingProduct.imagen = newProduct.imagen;
+    //     }
+    
+    //     await updateDoc(doc(db, "carta", editingProduct.categoria, "productos", editingProduct.id), editingProduct);
+    //     setEditingProduct(null);
+    
+    //     obtenerCarta();
+    //     setEsVisibleFormEditar(false);
+    // }
+
+    async function saveEditarProducto(e) {
         e.preventDefault();
         console.log(editingProduct);
-    
+
         if(editingProduct.imagen === '') {
             editingProduct.imagen = newProduct.imagen;
         }
-    
+
         await updateDoc(doc(db, "carta", editingProduct.categoria, "productos", editingProduct.id), editingProduct);
         setEditingProduct(null);
-    
+
         obtenerCarta();
         setEsVisibleFormEditar(false);
+
     }
+
+        
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
@@ -148,7 +199,8 @@ function GestionarCarta() {
                         setEditingProduct({ ...editingProduct, imagen: downloadURL });
                     } else {
                         setNewProduct({ ...newProduct, imagen: downloadURL });
-                    }                });
+                    }                
+                });
             }
         );
     }
@@ -176,7 +228,7 @@ function GestionarCarta() {
                             {isFormVisibleCategory && (
                                 <div className='w-100 d-flex justify-content-center flex-column align-items-center'>
                                     <h2>Crear nueva categoría</h2>
-                                    <form className='form-edit-producto w-75' onSubmit={handleAddCategoria}>
+                                    <form className='form-edit-producto w-75' onSubmit={agregarNuevaCategoria}>
                                         <label>
                                             Categoría:
                                             <input type="text" value={nuevaCategoria} onChange={(e) => setNuevaCategoria(e.target.value)} />
@@ -189,7 +241,7 @@ function GestionarCarta() {
                             {isFormVisible && (
                                 <div className='w-100 d-flex justify-content-center flex-column align-items-center'>
                                     <h2>Crear nuevo producto</h2>
-                                    <form className='form-edit-producto w-75' onSubmit={handleAddProduct}>
+                                    <form className='form-edit-producto w-75' onSubmit={agregarProductoACarta}>
                                         <label>
                                             Categoría:
                                             <select value={categoriaElegida} onChange={(e) => setCategoriaElegida(e.target.value)}>
@@ -248,10 +300,10 @@ function GestionarCarta() {
                                                                 <p><strong>Ingredientes: </strong>{producto.ingredientes}</p>
                                                                 <div className='d-flex flex-column gap-2'>
                                                                     <p><strong>Acciones: </strong></p>
-                                                                    <button className='btn btn-outline-warning' onClick={() => handleEdit(producto.id, { ...producto, categoria: item.id })}>Editar</button>
+                                                                    <button className='btn btn-outline-warning' onClick={() => editarProducto(producto.id, { ...producto, categoria: item.id })}>Editar</button>
 
                                                                     {editingProduct && producto.id === editingProduct.id && esVisibleFormEditar && (
-                                                                        <form className='form form-edit-producto' onSubmit={handleSubmit}>
+                                                                        <form className='form form-edit-producto' onSubmit={saveEditarProducto}>
                                                                             <label>Nombre:
                                                                                 <input type="text" value={editingProduct.nombre} onChange={(e) => setEditingProduct({ ...editingProduct, nombre: e.target.value })} />               
                                                                             </label>
@@ -267,7 +319,7 @@ function GestionarCarta() {
                                                                             <button type="submit" className='button1'>Guardar cambios</button>
                                                                         </form>
                                                                     )}
-                                                                    <button className='btn btn-outline-danger' onClick={() => handleDelete(producto.id, item.id)}>Eliminar</button>
+                                                                    <button className='btn btn-outline-danger' onClick={() => eliminarProductoDeCarta(producto.id, item.id)}>Eliminar</button>
                                                                 </div>
 
                                                             </div>                                                
