@@ -2,7 +2,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, collection, getDocs, onSnapshot, query } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, onSnapshot, query, doc, updateDoc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import { set } from 'firebase/database';
 
@@ -12,7 +12,6 @@ function Cabecera() {
     const [isAdmin, setIsAdmin] = useState(false);
 
     const [comandasPendientes, setComandasPendientes] = useState([]);
-    // const [sonidoActivo, setSonidoActivo] = useState(false);
 
     const auth = getAuth();
     const db = getFirestore();
@@ -22,17 +21,6 @@ function Cabecera() {
             setUser(user);
     });
     }, []);
-
-    // useEffect(() => {
-    //     const unsubscribe = onAuthStateChanged(auth, (user) => {
-    //         if (user) {
-    //             comprobarRol(user);
-    //             obtenerNumeroComandasPendientes();
-    //         }
-    //     });
-
-    //     return () => unsubscribe();
-    // }, [auth]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -44,6 +32,9 @@ function Cabecera() {
                     snapshot.docChanges().forEach((change) => {
                         if (change.type === "modified" && change.doc.data().uid === user.uid) {
                             setIsAdmin(change.doc.data().rol === 'admin');
+                            if (change.doc.data().estado === 'inactivo' && change.doc.data().uid === user.uid) {
+                                cerrarSesion();
+                            }
                         }
                     });
                 });
@@ -67,39 +58,28 @@ function Cabecera() {
         });
     }
 
+    function cerrarSesion() {
 
-    function logout() { 
-        const auth = getAuth();
         signOut(auth).then(() => {
-            console.log('Sesión cerrada');
-            setIsAdmin(false);
+            console.log("Sesión cerrada y estado actualizado");
+            // Sign-out successful.
         }).catch((error) => {
-          // An error happened.
+            // An error happened during sign out.
         });
+
     }
+    
 
     function obtenerNumeroComandasPendientes() {
         const q = query(collection(db, 'comandas'));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const newComandas = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             const comandas = newComandas.filter(comanda => comanda.estado === 'Pendiente');
-            // if(sonidoActivo){
-            //     reproducirSonido(comandas.length);
-            // }
             setComandasPendientes(comandas.length);
         });
     
         return unsubscribe;
     }
-
-    // function reproducirSonido(comandasLength) {
-    //     console.log(comandasPendientes + " - " + comandasLength + " - " + sonidoActivo)
-    //     if (comandasLength > comandasPendientes && sonidoActivo){
-    //         let audio = new Audio('./audio/notificacion.mp3');
-    //         audio.play();
-    //     }
-    // }
-
 
     return (
         <>
@@ -138,7 +118,7 @@ function Cabecera() {
                                                     <li><Link className="dropdown-item" to="/registromesas">Registro Mesas</Link></li>
                                                 </>
                                             )}
-                                                <li><a className="dropdown-item" href="#" onClick={logout}>Cerrar Sesión</a></li>
+                                                <li><a className="dropdown-item" href="#" onClick={cerrarSesion}>Cerrar Sesión</a></li>
                                             </ul>
                                     </li>
                                     {/* {   !sonidoActivo &&

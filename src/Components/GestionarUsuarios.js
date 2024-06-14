@@ -2,15 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { deleteUser as firebaseDeleteUser, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+
 
 import app from '../firebase';
 
 function GestionarUsuarios() {
     const [isAdmin, setIsAdmin] = useState(false);
     const [usuarios, setUsuarios] = useState([]);
-    const [usuario, setUsuario] = useState({});
-
 
     const db = getFirestore();
     const auth = getAuth();
@@ -63,16 +61,6 @@ function GestionarUsuarios() {
         setUsuarios(usuariosData);
     }
 
-    async function borrarUsuario(userId) {
-        try {
-            await deleteDoc(doc(db, 'users', userId));
-            await auth.deleteUser(userId);
-            console.log('Usuario eliminado');
-        } catch (error) {
-            console.error('Error al eliminar el usuario:', error);
-        }
-    }
-
     async function cambiarRol(id, newRole) {
         const user = auth.currentUser;
         if (user && user.uid === id) {
@@ -86,6 +74,28 @@ function GestionarUsuarios() {
         await updateDoc(userRef, { rol: newRole });
     }
 
+    async function cambiarEstado(id, newState) {
+        const user = auth.currentUser;
+    
+        if (user && user.uid === id && newState === 'inactivo') {
+            alert('No puedes desactivarte a ti mismo');
+            return;
+        }
+        let canChange = true;
+        usuarios.forEach(usuario => {
+            if (usuario.rol === 'admin' && usuario.id === id && newState === 'inactivo') {
+                alert('No puedes desactivar a un administrador');
+                canChange = false;
+                return;
+            }
+        });
+    
+        if (!canChange) return;
+    
+        const userRef = doc(db, 'users', id);
+        await updateDoc(userRef, { estado: newState });
+    }
+
     return (
         <>
         {isAdmin && 
@@ -93,13 +103,14 @@ function GestionarUsuarios() {
                 <div className="container">
                     <h1>Gestionar Usuarios</h1>
                     <Link to="/registro" className="btn btn-primary">Nuevo Usuario</Link>
+
                     <div className="table-responsive">
                         <table className="table mt-4">
                             <thead>
                                 <tr>
                                     <th>Email</th>
                                     <th>Rol</th>
-                                    <th>Acciones</th>
+                                    <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -113,8 +124,12 @@ function GestionarUsuarios() {
                                         </select>
                                     </td>
                                     <td className='d-flex flex-column gap-2'>
-                                        <button className="btn btn-outline-danger w-100" onClick={() => borrarUsuario(usuario.id)}>Eliminar</button>
+                                        <select value={usuario.estado} onChange={(e) => cambiarEstado(usuario.id, e.target.value)}>
+                                            <option value="activo">Activo</option>
+                                            <option value="inactivo">Inactivo</option>
+                                        </select>
                                     </td>
+
                                 </tr>
                             ))}
                             </tbody>

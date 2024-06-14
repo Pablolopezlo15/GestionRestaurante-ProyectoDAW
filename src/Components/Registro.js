@@ -56,6 +56,7 @@ function Registro() {
                         rol: rol,
                         uid: user.uid,
                         correo: correo,
+                        estado: 'activo'
                     });
                 }).catch((error) => {
                     console.log(error);

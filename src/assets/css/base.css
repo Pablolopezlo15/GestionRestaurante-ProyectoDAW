@@ -111,6 +111,10 @@ textarea{
     gap: 1rem;
   }
 
+  .form-incio-sesion{
+    min-width: 250px;
+  }
+
   @media screen and (max-width: 768px) {
     .form-registro {
       width: 100%;
