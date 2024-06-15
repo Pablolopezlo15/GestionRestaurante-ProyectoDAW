@@ -19,6 +19,7 @@ const InicioSesion = () => {
     const [inactivo, setInactivo] = useState(false);
 
     const [errorPorCorreoExisitente, seterrorPorCorreoExisitente] = useState('');
+    const [errorValidacion, setErrorValidacion] = useState('');
 
     const db = getFirestore(app);
 
@@ -47,14 +48,27 @@ const InicioSesion = () => {
 
     }
 
+    // Función para validar el correo electrónico
+    const validarEmail = (email) => {
+        return /\S+@\S+\.\S+/.test(email);
+    };
+
+
 
     async function iniciarSesionEmail(e) {
         e.preventDefault();
+        setErrorValidacion('');
         seterrorPorCorreoExisitente('');
         setEmailVerified(true);
         setInactivo(false);
 
         const auth = getAuth();
+
+        // Validación del correo electrónico
+        if (!validarEmail(email)) {
+            setErrorValidacion('El formato del correo electrónico no es válido.');
+            return;
+        }
     
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -128,7 +142,7 @@ const InicioSesion = () => {
                 </div>
             }
             { inactivo && <p className="alert alert-danger">Tu cuenta ha sido desactivada. Ponte en contacto con tu administrador</p> }
-
+            { errorValidacion && <p className="alert alert-danger">{errorValidacion}</p>}
             { errorPorCorreoExisitente && <p className="alert alert-danger">{errorPorCorreoExisitente}</p> }
             <p className='text-center mb-3'>¿Eres un empleado del restaurante y no tienes acceso? Ponte en contacto con tu administrador</p>
             { user && <p className="alert alert-success">Bienvenido {user.email}</p> }

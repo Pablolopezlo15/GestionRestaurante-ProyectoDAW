@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { getFirestore ,collection, getDocs, addDoc } from 'firebase/firestore';
 import app from '../firebase';
+import { set } from 'firebase/database';
 
 
 function CrearComanda({ idMesa, numeroMesa }) {
     const [comanda, setComanda] = useState([]);
     const [carta, setCarta] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [observaciones, setObservaciones] = useState('');
     const db = getFirestore();
 
 
@@ -57,13 +60,14 @@ function CrearComanda({ idMesa, numeroMesa }) {
             hora: new Date().toLocaleTimeString(),
             estado: 'Pendiente',
             idMesa: idMesa,
-            numeroMesa: numeroMesa
+            numeroMesa: numeroMesa,
+            observaciones: observaciones
         };
     
         const comandaRef = await addDoc(collection(db, 'comandas'), comandaData);
-        // await addDoc(collection(db, 'mesas', idMesa, 'comandas'), { idComanda: comandaRef.id });
 
         setComanda([]);
+        setObservaciones('');
         console.log('Comanda enviada');
     }
 
@@ -108,7 +112,7 @@ function CrearComanda({ idMesa, numeroMesa }) {
             <div className="container mt-4">
                 <h2 className="mb-4">Productos en la comanda:</h2>
                     {comanda.map((producto, index) => (
-                        <div key={index} className="d-flex align-items-center justify-content-between mb-3 p-3 border rounded shadow-sm gap-2">
+                        <div key={index} className="d-flex align-items-center flex-wrap justify-content-between mb-3 p-3 border rounded shadow-sm gap-2">
                             <div className="d-flex align-items-center gap-3">
                                 <p><strong>{producto.nombre}</strong></p>
                                 <p>{(producto.precio * producto.cantidad).toFixed(2)}€</p>
@@ -120,7 +124,14 @@ function CrearComanda({ idMesa, numeroMesa }) {
                             </div>
                         </div>
                     ))}
-                <button type="button" className="btn btn-success mt-4" onClick={enviarComanda}>Enviar Comanda</button>
+                    <div className="mb-4">
+                        <label htmlFor="observaciones" className="form-label">Observaciones:</label>
+                        <textarea className="form-control" id="observaciones" rows="3" value={observaciones} onChange={e => setObservaciones(e.target.value)}></textarea>
+                    </div>
+                    <div className='d-flex justify-content-center'>
+                        <button type="button" className="btn btn-success mt-2 mb-2 p-4" onClick={enviarComanda}>Enviar Comanda</button>
+
+                    </div>
             </div>
 
         </div>

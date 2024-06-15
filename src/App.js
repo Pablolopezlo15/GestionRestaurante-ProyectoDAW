@@ -36,7 +36,7 @@ function App() {
     return (
         <div className="App">
             <header className="App-header text-center d-flex flex-column justify-content-end">
-                <h1>Restaurante Pablo López</h1>
+                <h1 className='titulo'>Restaurante Pablo López</h1>
                 <p>Bienvenido a la web</p>
                 <div>
                     <p className='inicio-empleado'>¿Eres empleado? <button className="btn"><Link className='link-inicio' to="/login">Iniciar sesión</Link></button></p>

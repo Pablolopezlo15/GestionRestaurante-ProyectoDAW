@@ -14,6 +14,12 @@ function Registro() {
     const [errorYaEnUso, setErrorYaEnUso] = useState(false);
     const [registrado, setRegistrado] = useState(false);
     const [loading, setLoading] = useState(false);
+    
+    const [errorValidacion, setErrorValidacion] = useState(null);
+    const [nombreValido, setNombreValido] = useState(null);
+    const [correoValido, setCorreoValido] = useState(null);
+    const [contraseñaValida, setContraseñaValida] = useState(null);
+
 
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));
@@ -24,8 +30,30 @@ function Registro() {
         });
     }
 
+    // Funciones de validación actualizadas para actualizar los estados
+    const validarNombre = (nombre) => {
+        const esValido = /^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(nombre);
+        setNombreValido(esValido);
+        return esValido;
+    };
+
+    const validarEmail = (email) => {
+        const esValido = /\S+@\S+\.\S+/.test(email);
+        setCorreoValido(esValido);
+        return esValido;
+    };
+
+    const validarPassword = (password) => {
+        const longitudValida = password.length >= 6;
+        const contieneNumerosYLetras = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(password);
+        const esValido = longitudValida && contieneNumerosYLetras;
+        setContraseñaValida(esValido);
+        return esValido;
+    };
+
     function registro(e) {
         setLoading(true);
+        setErrorValidacion('');
         setErrorYaEnUso(false);
         setRegistrado(false);
         e.preventDefault();
@@ -34,6 +62,12 @@ function Registro() {
         const correo = document.getElementById('correo').value;
         const contraseña = document.getElementById('contraseña').value;
         const rol = document.querySelector('select').value;
+
+        if (!nombreValido || !correoValido || !contraseñaValida) {
+            setErrorValidacion('Por favor, corrija los errores antes de registrarse.');
+            setLoading(false);
+            return;
+        }
 
         createUserWithEmailAndPassword(auth, correo, contraseña, nombre, rol)
             .then((userCredential) => {
@@ -109,10 +143,11 @@ function Registro() {
                         </div>
                     }
                     {errorYaEnUso && <p className='text-danger'>El correo ya está en uso</p>}
+                    {errorValidacion && <p className="alert alert-danger">Corrige los campos antes de registrarte</p>}
                     {registrado && <p className='text-success'>Usuario registrado. Revisa tu correo para verificar tu cuenta</p>}
                     <form className='form-edit-producto  form-registro'>
                         <label>Nombre: 
-                            <input type="text" name="nombre" id="nombre" />
+                            <input type="text" name="nombre" id="nombre" onBlur={(e) => validarNombre(e.target.value)} style={{ borderColor: nombreValido === false ? 'red' : nombreValido === true ? 'green' : '', borderWidth: '3px' }} />
                         </label>
                         <label>Rol: 
                             <select name="rol">
@@ -121,10 +156,10 @@ function Registro() {
                             </select>
                         </label>
                         <label>Correo: 
-                            <input type="email" name="correo" id="correo" />
+                            <input type="email" name="correo" id="correo" onBlur={(e) => validarEmail(e.target.value)} style={{ borderColor: correoValido === false ? 'red' : correoValido === true ? 'green' : '' , borderWidth: '3px'}}/>
                         </label>
                         <label>Contraseña:
-                            <input type="password" name="contraseña" id="contraseña" />
+                            <input type="password" name="contraseña" id="contraseña" onBlur={(e) => validarPassword(e.target.value)} style={{ borderColor: contraseñaValida === false ? 'red' : contraseñaValida === true ? 'green' : '', borderWidth: '3px' }}/>
                         </label>
                         <button className='button1' onClick={registro}>Registrarse</button>
                     </form>

@@ -94,6 +94,13 @@ function Comanda() {
                                         <p className='mb-0'>Unidades: {producto.cantidad}</p>
                                     </div>
                                 ))}
+                                {comanda.observaciones && 
+                                    <div>
+                                        <h4>Observaciones</h4>
+                                        <p>{comanda.observaciones}</p>
+                                    </div>
+
+                                }
 
                                 <div className='d-flex mt-2 gap-2'>
                                     <button className='btn btn-warning' onClick={() => enPreparacion(comanda.id)}>En preparación</button>

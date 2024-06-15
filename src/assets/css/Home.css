@@ -1,12 +1,19 @@
-.App-header {
+/* .App-header {
    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #1E1E1E 95%), url(../img/restaurant1.webp);
    background-size: cover;
    background-position: center;
    background-repeat: no-repeat;
    height: 60vh;
+} */
+.App-header {
+   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #1e1e1e 95%), 
+   url('../img/restaurant1.webp') center center / cover no-repeat;
+   height: 60vh;
+
 }
-
-
+.titulo{
+   font-family: var(--font-secondary);
+}
 .slidercontenedor{
    display: flex;
    justify-content: center;

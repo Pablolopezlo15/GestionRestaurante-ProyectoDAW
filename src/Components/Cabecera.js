@@ -12,6 +12,7 @@ function Cabecera() {
     const [isAdmin, setIsAdmin] = useState(false);
 
     const [comandasPendientes, setComandasPendientes] = useState([]);
+    const [comandasListas, setComandasListas] = useState([]);
 
     const auth = getAuth();
     const db = getFirestore();
@@ -73,7 +74,9 @@ function Cabecera() {
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const newComandas = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             const comandas = newComandas.filter(comanda => comanda.estado === 'Pendiente');
+            const comandasListas = newComandas.filter(comanda => comanda.estado === 'Listo');
             setComandasPendientes(comandas.length);
+            setComandasListas(comandasListas.length);
         });
     
         return unsubscribe;
@@ -103,7 +106,10 @@ function Cabecera() {
                                         <Link className="nav-link" to="/mesas">Mesas</Link>
                                     </li>
                                     <li className="nav-item btn-cabecera">
-                                        <Link className="nav-link" to="/comanda">Comandas <span className='text-danger'>{comandasPendientes}</span></Link>
+                                        <Link className="nav-link" to="/comanda">Comandas 
+                                        {comandasPendientes > 0 && <span className='text-danger'> {comandasPendientes} </span>}
+                                        {comandasListas > 0 && <span className='text-success'> {comandasListas} </span>}
+                                        </Link>
                                     </li>
                                     <li className="nav-item dropdown btn-cabecera">
                                         <a className="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">Bienvenido, {user.displayName}</a>
@@ -119,12 +125,7 @@ function Cabecera() {
                                                 <li><a className="dropdown-item" href="#" onClick={cerrarSesion}>Cerrar Sesión</a></li>
                                             </ul>
                                     </li>
-                                    {/* {   !sonidoActivo &&
-                                        <i className="ri-megaphone-fill text-danger" onClick={() => setSonidoActivo(!sonidoActivo)}></i>
-                                    }
-                                    {   sonidoActivo &&
-                                        <i className="ri-megaphone-line" onClick={() => setSonidoActivo(!sonidoActivo)}></i>
-                                    } */}
+
                                 </>
                                 }
                             </ul>

@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Teachers:ital,wght@0,400..800;1,400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+IS:wght@100..400&display=swap');
+
 /* Variables */
 :root {
     --color-primary: #AD6903;
@@ -10,8 +12,8 @@
     --color-background: #1E1E1E;
 
     --font-primary: 'Teachers', cursive;
-    --font-secondary: 'Archivo Black', sans-serif;
-}
+    --font-secondary: 'Playwrite IS', sans-serif;
+  }
 
 *{
     margin: 0;
@@ -50,13 +52,16 @@ input{
     border-radius: 5px;
     border: none;
 }
-
+select{
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+}
 textarea{
     padding: 0.5rem;
     border-radius: 5px;
     border: none;
 }
-
 .button1{
     padding: 0.4rem;
     border-radius: 5px;

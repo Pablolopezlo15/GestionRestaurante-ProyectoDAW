@@ -98,7 +98,7 @@ function RegistroMesas() {
                             <option value='6'>Mesa 6</option>
                         </select>
                     </div>
-                    <div className='table-responsive mt-3'>
+                    <div className='table-responsive mt-3 rounded-3'>
                         <table className='table table-striped'>
                             <thead>
                                 <tr>

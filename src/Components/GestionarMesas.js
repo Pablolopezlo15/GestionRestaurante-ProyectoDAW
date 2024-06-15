@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { deleteUser as firebaseDeleteUser, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import '../assets/css/index.css';
 
 import app from '../firebase';
 
@@ -131,8 +132,8 @@ function GestionarMesas() {
                         </form>
                     }
                 </div>
-                <div className="d-flex justify-content-center mt-4">
-                    <table className="table">
+                <div className="d-flex justify-content-center mt-4 rounded-3">
+                    <table className="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Número de mesa</th>
