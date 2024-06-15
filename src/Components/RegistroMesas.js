@@ -146,7 +146,7 @@ function RegistroMesas() {
                                                     
                                                     <div className="modal-footer">
                                                         { pdfDocument &&
-                                                                <PDFDownloadLink className="btn btn-primary" document={pdfDocument} fileName={`CuentaMesa${mesa.numero}.pdf`}>
+                                                                <PDFDownloadLink className="btn btn-primary" document={pdfDocument} fileName={"Mesa" + mesa.numero + " " + new Date().toLocaleTimeString()}>
                                                                     {({ blob, url, loading, error }) => (loading ? 'Cargando documento...' : 'Descargar cuenta')}
                                                                 </PDFDownloadLink>
                                                         }
