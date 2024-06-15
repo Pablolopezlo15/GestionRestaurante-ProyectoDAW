@@ -57,15 +57,15 @@ function App() {
                                 <p>Pizzas</p>
                             </div>
                             <div className="slide2" id="slide3">
-                                <img src='https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2Fprimer-plano-de-la-pizza-prosciutto-o-de-jamon-cocido.webp?alt=media&token=d82b7977-ed10-46ac-9297-af077c9dd4fa' className="slide2-img" />
+                                <img src='https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2Fsolomillo-de-ternera-a-la-plancha_1000.webp?alt=media&token=75d82e87-7f3b-41bd-8279-79a17bfa58cb' className="slide2-img" />
                                 <p>Carnes</p>
                             </div>
                             <div className="slide2" id="slide4">
-                                <img src='https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2Fprimer-plano-de-la-pizza-prosciutto-o-de-jamon-cocido.webp?alt=media&token=d82b7977-ed10-46ac-9297-af077c9dd4fa' className="slide2-img" />
+                                <img src='https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2Fbacalao-al-horno-PORTADA-1.jpg?alt=media&token=96453736-421a-48d0-95ea-39e89be4cb0b' className="slide2-img" />
                                 <p>Pescados</p>
                             </div>
                             <div className="slide2" id="slide5">
-                                <img src='https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2Fprimer-plano-de-la-pizza-prosciutto-o-de-jamon-cocido.webp?alt=media&token=d82b7977-ed10-46ac-9297-af077c9dd4fa' className="slide2-img" />
+                                <img src='https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2FCaptura%20de%20pantalla%202024-06-11%20032113.png?alt=media&token=8f60b55a-f4c0-47ff-b5f0-86a06fb1af38' className="slide2-img" />
                                 <p>Postres</p>
                             </div>
                         </div>
@@ -76,98 +76,86 @@ function App() {
 
                 <section className='d-flex justify-content-center align-items-center flex-column mb-5'>
                     <h2>Nuestros mejores platos</h2>
-                    <div className='d-flex gap-2 flex-wrap justify-content-center align-items-center mt-5'>
-                        <div className="card">
-                          <div className="content">
-                            <div className="back">
-                              <div className="back-content">
+                    <div className='d-flex gap-5 flex-wrap justify-content-center align-items-center mt-5'>
+						<div className="card-home">
+                          	<div className="content">
+                            	<div className="back">
+                              		<div className="back-content">
+                                		<strong>Descubrir</strong>
+                              		</div>
+                            	</div>
+                            	<div className="front">
+		
+                            	  	<div className="img">
+                            	    	<img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2FCaptura%20de%20pantalla%202024-06-14%20235506.png?alt=media&token=9a2d953d-64d1-4d1a-9a47-6b7faa54359f" alt="" />
+                            	  	</div>
+		
+                            	  	<div className="front-content">
+                            	    	<small className="badge">Carne</small>
+                            	    	<div className="description">
+                            	      		<div className="title">
+                            	        		<p className="title"><strong>Solomillo de cerdo</strong></p>
+                            	      		</div>
+                            	      		<p className="card-footer">16 € &nbsp; | &nbsp; plato</p>
+                            	    	</div>
+                            	  	</div>
 
-                                <strong>Hover Me</strong>
-                              </div>
-                            </div>
-                            <div className="front">
-
-                              <div className="img">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/patatas-cheese-bacon-foto-principal.jpg?alt=media&token=f68b630f-412c-45b6-ad48-5473a00e809b" alt="" />
-                              </div>
-
-                              <div className="front-content">
-                                <small className="badge">Pasta</small>
-                                <div className="description">
-                                  <div className="title">
-                                    <p className="title">
-                                      <strong>Spaguetti Bolognese</strong>
-                                    </p>
-                                  </div>
-                                  <p className="card-footer">
-                                    30 Mins &nbsp; | &nbsp; 1 Serving
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                            	</div>
+                          	</div>
                         </div>
 
-                        <div className="card">
-                          <div className="content">
-                            <div className="back">
-                              <div className="back-content">
-                            
-                                <strong>Hover Me</strong>
-                              </div>
-                            </div>
-                            <div className="front">
-                            
-                              <div className="img">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/patatas-cheese-bacon-foto-principal.jpg?alt=media&token=f68b630f-412c-45b6-ad48-5473a00e809b" alt="" />
-                              </div>
-                            
-                              <div className="front-content">
-                                <small className="badge">Pasta</small>
-                                <div className="description">
-                                  <div className="title">
-                                    <p className="title">
-                                      <strong>Spaguetti Bolognese</strong>
-                                    </p>
-                                  </div>
-                                  <p className="card-footer">
-                                    30 Mins &nbsp; | &nbsp; 1 Serving
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                        <div className="card-home">
+                          	<div className="content">
+                            	<div className="back">
+                              		<div className="back-content">
+                                		<strong>Descubrir</strong>
+                              		</div>
+                            	</div>
+                            	<div className="front">
+		
+                            	  	<div className="img">
+                            	    	<img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2FCaptura%20de%20pantalla%202024-06-04%20125116.png?alt=media&token=48aad2bb-7531-4665-86e0-284d27ded6f7" alt="" />
+                            	  	</div>
+		
+                            	  	<div className="front-content">
+                            	    	<small className="badge">Entrante</small>
+                            	    	<div className="description">
+                            	      		<div className="title">
+                            	        		<p className="title"><strong>Gambas al pil pil</strong></p>
+                            	      		</div>
+                            	      		<p className="card-footer">14 € &nbsp; | &nbsp; ración</p>
+                            	    	</div>
+                            	  	</div>
+
+                            	</div>
+                          	</div>
                         </div>
 
-                        <div className="card">
-                          <div className="content">
-                            <div className="back">
-                              <div className="back-content">
-                            
-                                <strong>Hover Me</strong>
-                              </div>
-                            </div>
-                            <div className="front">
-                            
-                              <div className="img">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/patatas-cheese-bacon-foto-principal.jpg?alt=media&token=f68b630f-412c-45b6-ad48-5473a00e809b" alt="" />
-                              </div>
-                            
-                              <div className="front-content">
-                                <small className="badge">Pasta</small>
-                                <div className="description">
-                                  <div className="title">
-                                    <p className="title">
-                                      <strong>Spaguetti Bolognese</strong>
-                                    </p>
-                                  </div>
-                                  <p className="card-footer">
-                                    30 Mins &nbsp; | &nbsp; 1 Serving
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                        <div className="card-home">
+                          	<div className="content">
+                            	<div className="back">
+                              		<div className="back-content">
+                                		<strong>Descubrir</strong>
+                              		</div>
+                            	</div>
+                            	<div className="front">
+		
+                            	  	<div className="img">
+                            	    	<img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/images%2Fcoulant-chocolate.webp?alt=media&token=938faa95-b625-486f-8467-a15871407328" alt="" />
+                            	  	</div>
+		
+                            	  	<div className="front-content">
+                            	    	<small className="badge">Postre</small>
+                            	    	<div className="description">
+                            	      		<div className="title">
+                            	        		<p className="title"><strong>Coulant de chocolate</strong></p>
+                            	      		</div>
+                            	      		<p className="card-footer">4,50 € &nbsp; | &nbsp; ración</p>
+                            	    	</div>
+                            	  	</div>
+
+                            	</div>
+                          	</div>
                         </div>
                     </div>
                 

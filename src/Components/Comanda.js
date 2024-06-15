@@ -56,7 +56,7 @@ function Comanda() {
         <>
             <div className='container'>
 
-                <div className='d-flex justify-content-center gap-2 mt-3'>
+                <div className='d-flex justify-content-center gap-2 mt-5'>
                     <h1>Comandas</h1>
                     {loading && 
                         <div className="spinner-border text-warning" role="status">

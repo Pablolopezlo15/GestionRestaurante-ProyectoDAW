@@ -100,8 +100,8 @@ function GestionarUsuarios() {
         <>
         {isAdmin && 
             <>
-                <div className="container">
-                    <h1>Gestionar Usuarios</h1>
+                <div className="container mt-5">
+                    <h1 className='text-center'>Gestionar Usuarios</h1>
                     <Link to="/registro" className="btn btn-primary">Nuevo Usuario</Link>
 
                     <div className="table-responsive">
@@ -138,8 +138,15 @@ function GestionarUsuarios() {
                 </div>
             </>
         }
-        {!isAdmin && <p>No tienes permisos para acceder a esta página</p>}
-
+        {!isAdmin && 
+            <div className="d-flex justify-content-center align-items-center flex-column mt-5">
+                <h2>No tienes permisos para acceder a esta página</h2>
+                <div className='d-flex flex-wrap justify-content-center align-items-center'>
+                    <img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/prohibido%20mano.webp?alt=media&token=50d5c971-7304-4976-bc17-6cd4da7d4c71" alt="403" />
+                    <img src="https://firebasestorage.googleapis.com/v0/b/gestion--restaurante.appspot.com/o/403.webp?alt=media&token=d9a3d9ba-803e-4141-bd5e-30b491ff79b9" alt="403" />
+                </div>
+            </div>
+        }
         </>
 
     );

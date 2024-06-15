@@ -31,7 +31,7 @@ function Carta() {
         <>
             <div className="container">
                 <div className="d-flex justify-content-center flex-column align-items-center gap-4 ">
-                    <div className="mt-3">
+                    <div className="mt-5">
                         <h1>Carta</h1>
                     </div>
                     {loading && 
@@ -41,7 +41,7 @@ function Carta() {
                     }
                 </div>
 
-                <div className="accordion carta" id="accordionExample">
+                <div className="accordion carta mb-5" id="accordionExample">
                     {
                         carta.map((item, index) => (
                             <div className="accordion-item" key={item.id}>

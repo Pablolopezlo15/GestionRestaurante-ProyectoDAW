@@ -108,7 +108,7 @@ function Mesas() {
 
     return (
         <>
-            <h1 className='text-center mt-3'>Mesas</h1>
+            <h1 className='text-center mt-5 mb-3'>Mesas</h1>
 
             <div className='contenedor-principal'>
             {loading && 
