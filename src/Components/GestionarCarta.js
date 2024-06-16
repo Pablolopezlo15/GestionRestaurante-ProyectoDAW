@@ -4,6 +4,7 @@ import { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, o
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 import app from '../firebase';
+import { set } from 'firebase/database';
 
 function GestionarCarta() {
     const auth = getAuth(app);
@@ -21,6 +22,9 @@ function GestionarCarta() {
     const [categoriaEditing, setCategoriaEditing] = useState(null);
     const [editingProduct, setEditingProduct] = useState(null);
     const [nuevaCategoria, setNuevaCategoria] = useState('');
+    const [mostrarBorrarCategoria, setMostrarBorrarCategoria] = useState(false);
+    const [categoriaAEliminar, setCategoriaAEliminar] = useState('');
+
     const [loading, setLoading] = useState(true);
 
     /*
@@ -239,6 +243,12 @@ function GestionarCarta() {
     * @param {string} id - El id de la categoría a eliminar
     */
     async function eliminarCategoria(id) {
+        const productosSnapshot = await getDocs(collection(db, "carta", id, "productos"));
+        if (!productosSnapshot.empty) {
+            setMostrarBorrarCategoria(true);
+            setCategoriaAEliminar(id);
+            return;
+        }
         await deleteDoc(doc(db, "carta", id));
         obtenerCarta();
     }
@@ -391,6 +401,24 @@ function GestionarCarta() {
                             </ul>
 
                         </div>
+
+                        {mostrarBorrarCategoria && (
+                            <div className="modal text-black" tabIndex="-1" role="dialog" style={{ display: 'block'}}>
+                                <div className="modal-dialog" role="document">
+                                    <div className="modal-content">
+                                        <div className="modal-header text-danger">
+                                            <h5 className="modal-title">Eliminar Categoría</h5>
+                                        </div>
+                                        <div className="modal-body">
+                                            <p>La categoría contiene productos y no se puede eliminar.</p>
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-outline-danger" data-dismiss="modal" onClick={() => setMostrarBorrarCategoria(false)}>Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </>
                 )}
                 {!isAdmin && 
