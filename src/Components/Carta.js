@@ -8,6 +8,14 @@ function Carta() {
     const [carta, setCarta] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    /*
+    * Obtiene los datos de la carta de la base de datos de Firebase
+    * y actualiza el estado de la carta con los datos obtenidos
+    * al cargar el componente
+    *   
+    * Muestra la carta con los datos obtenidos de la base de datos
+    * de Firebase
+    */
     useEffect(() => {
         async function obtenerCarta() {
             const db = getFirestore();

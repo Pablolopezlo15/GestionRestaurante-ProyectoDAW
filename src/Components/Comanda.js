@@ -11,7 +11,12 @@ function Comanda() {
 
     const db = getFirestore();
 
-
+    /*
+    * Obtiene las comandas pendientes de la base de datos de Firebase
+    * y actualiza el estado de las comandas pendientes con los datos obtenidos
+    * al cargar el componente
+    * 
+    */
     function obtenerComandasPendientes() {
         const q = query(collection(db, 'comandas'));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -23,9 +28,12 @@ function Comanda() {
         return unsubscribe;
     }
 
+    /*
+    * Obtiene las mesas de la base de datos de Firebase
+    * y actualiza el estado de las mesas con los datos obtenidos
+    * al cargar el componente
+    */ 
     useEffect(() => {
-
-
         const obtenerMesas = async () => {
             const snapshot = await getDocs(collection(db, 'mesas'));
             setMesas(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
@@ -36,17 +44,35 @@ function Comanda() {
 
     }, []);
 
+    /*
+    * Actualiza el estado de la comanda con el id especificado
+    * y el estado 'En preparación' y la hora actual
+    * 
+    * @param {string} idComanda - El id de la comanda
+    */
     function enPreparacion(idComanda) {
         console.log('En preparación');
         updateDoc(doc(db, 'comandas', idComanda), { estado: 'En preparación', hora: new Date().toLocaleTimeString()});
     }
-    
+
+    /*
+    * Actualiza el estado de la comanda con el id especificado
+    * y el estado 'Listo' y la hora actual
+    * 
+    * @param {string} idComanda - El id de la comanda
+    */
     function listo(idComanda) {
         console.log('Listo');
         updateDoc(doc(db, 'comandas', idComanda), { estado: 'Listo', hora: new Date().toLocaleTimeString()});
 
     }
 
+    /*
+    * Actualiza el estado de la comanda con el id especificado
+    * y el estado 'Entregado' y la hora actual
+    *   
+    * @param {string} idComanda - El id de la comanda
+    */ 
     function entregado(idComanda) {
         console.log('Entregado');
         updateDoc(doc(db, 'comandas', idComanda), { estado: 'Entregado', hora: new Date().toLocaleTimeString()});

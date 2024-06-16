@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, getDocs, onSnapshot, query, doc, updateDoc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
-import { set } from 'firebase/database';
 
 
 function Cabecera() {
@@ -14,15 +13,29 @@ function Cabecera() {
     const [comandasPendientes, setComandasPendientes] = useState([]);
     const [comandasListas, setComandasListas] = useState([]);
 
+    // Inicializa la autenticación y la base de datos de Firebase
     const auth = getAuth();
     const db = getFirestore();
 
+    /*
+    * Comprueba si hay un usuario autenticado y actualiza el estado
+    * del usuario con el usuario autenticado al cargar el componente
+    */
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             setUser(user);
     });
     }, []);
 
+    /*
+    * Comprueba si hay un usuario autenticado y actualiza el estado
+    * del usuario con el usuario autenticado
+    * 
+    * Comprueba si el usuario autenticado es administrador y actualiza el estado
+    * del usuario con el rol de administrador
+    * 
+    * Comprueba si el usuario autenticado está inactivo y cierra la sesión
+    */
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -48,6 +61,14 @@ function Cabecera() {
         });
     }, [auth, db]);
 
+    /*
+    * Comprueba si el usuario autenticado es administrador
+    *
+    * @param {Object} user - Usuario autenticado
+    * @returns {Boolean} - Devuelve true si el usuario es administrador
+    * y false si el usuario no es administrador
+    *   
+    */
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));
         usersSnapshot.forEach((doc) => {
@@ -57,6 +78,9 @@ function Cabecera() {
         });
     }
 
+    /*
+    * Cierra la sesión del usuario autenticado
+    */
     function cerrarSesion() {
 
         signOut(auth).then(() => {
@@ -68,7 +92,13 @@ function Cabecera() {
 
     }
     
-
+    /*
+    * Obtiene el número de comandas pendientes y actualiza el estado
+    * de las comandas pendientes
+    *  
+    * Obtiene el número de comandas listas y actualiza el estado
+    * de las comandas listas
+    */
     function obtenerNumeroComandasPendientes() {
         const q = query(collection(db, 'comandas'));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -114,14 +144,14 @@ function Cabecera() {
                                     <li className="nav-item dropdown btn-cabecera">
                                         <a className="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">Bienvenido, {user.displayName}</a>
                                             <ul className="dropdown-menu">
-                                            {isAdmin && (
-                                                <>
-                                                    <li><Link className="dropdown-item" to="/gestionarusuarios">Gestionar Usuarios</Link></li>
-                                                    <li><Link className="dropdown-item" to="/gestionarcarta">Gestionar Carta</Link></li>
-                                                    <li><Link className="dropdown-item" to="/gestionarmesas">Gestionar Mesas</Link></li>
-                                                    <li><Link className="dropdown-item" to="/registromesas">Registro Mesas</Link></li>
-                                                </>
-                                            )}
+                                                {isAdmin && (
+                                                    <>
+                                                        <li><Link className="dropdown-item" to="/gestionarusuarios">Gestionar Usuarios</Link></li>
+                                                        <li><Link className="dropdown-item" to="/gestionarcarta">Gestionar Carta</Link></li>
+                                                        <li><Link className="dropdown-item" to="/gestionarmesas">Gestionar Mesas</Link></li>
+                                                        <li><Link className="dropdown-item" to="/registromesas">Registro Mesas</Link></li>
+                                                    </>
+                                                )}
                                                 <li><a className="dropdown-item" href="#" onClick={cerrarSesion}>Cerrar Sesión</a></li>
                                             </ul>
                                     </li>

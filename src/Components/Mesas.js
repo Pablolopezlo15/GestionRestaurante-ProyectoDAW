@@ -20,7 +20,9 @@ function Mesas() {
     const db = getFirestore();
     const auth = getAuth();
 
-
+    /*
+    * Obtiene las mesas de la base de datos de Firebase
+    */
     function obtenerMesas() {
         const unsubscribe = onSnapshot(collection(db, 'mesas'), (snapshot) => {
             let mesas = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
@@ -32,6 +34,9 @@ function Mesas() {
         return unsubscribe;
     }
     
+    /*
+    * Obtiene las comandas pendientes de la base de datos de Firebase
+    */
     function obtenerComandasPendientes() {
         const unsubscribe = onSnapshot(collection(db, 'comandas'), (snapshot) => {
             let comandas = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
@@ -48,12 +53,20 @@ function Mesas() {
 
     }, []);
 
+    /*
+    * Actualiza el estado de la mesa a 'ocupada' y guarda la hora de apertura
+    */
     function abrirMesa(id) {
         console.log('Mesa abierta');
-        
         updateDoc(doc(db, 'mesas', id), { estado: 'ocupada', horaapertura: new Date().toLocaleTimeString(), dia: new Date().toLocaleDateString()});
     }
 
+    /*
+    * Actualiza el estado de la mesa a 'libre' y guarda la hora de cierre
+    * Si hay comandas pendientes, las guarda en el registro de mesas
+    * y las elimina de la colección de comandas
+    * @param {string} id - Identificador de la mesa
+    */
     async function cerrarMesa(id) {
         const db = getFirestore();
         const mesaRef = doc(db, 'mesas', id);
@@ -87,6 +100,10 @@ function Mesas() {
         });
     }
 
+    /*
+    * Crea una nueva comanda para la mesa con el id especificado
+    * @param {string} id - Identificador de la mesa
+    */
     function crearComanda(id) {
         console.log('Comanda creada');
         setMesaActual(id);
@@ -94,10 +111,22 @@ function Mesas() {
 
     }
 
+    /*
+    * Oculta el formulario de creación de comanda
+    */
     function ocultarComanda() {
         setMostrarCreacionComanda(false);
     }
 
+    /*
+    * Calcula la cuenta de la mesa con el id especificado
+    * @param {string} mesaActual - Identificador de la mesa
+    * @param {string} dia - Día de la apertura de la mesa
+    * @param {string} horaApertura - Hora de apertura de la mesa
+    * @param {array} comandasPendientes - Comandas pendientes de la mesa
+    * @param {string} usuario - Nombre del usuario que calcula la cuenta
+    * @returns {object} - Documento PDF con la cuenta de la mesa
+    */
     function calcularCuenta(mesaActual, dia, horaApertura, comandasPendientes, usuario) {
         console.log(comandasPendientes);
         setMesaActual(mesaActual);

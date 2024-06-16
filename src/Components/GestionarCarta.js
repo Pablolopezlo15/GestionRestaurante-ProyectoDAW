@@ -23,6 +23,12 @@ function GestionarCarta() {
     const [nuevaCategoria, setNuevaCategoria] = useState('');
     const [loading, setLoading] = useState(true);
 
+    /*
+    * Comprueba si el usuario autenticado es administrador y actualiza el estado
+    * del usuario con el rol de administrador
+    * 
+    * @param {Object} user - El usuario autenticado
+    */
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));
         usersSnapshot.forEach((doc) => {
@@ -32,6 +38,15 @@ function GestionarCarta() {
         });
     }
 
+    /*
+    * Comprueba si hay un usuario autenticado y actualiza el estado
+    * del usuario con el usuario autenticado al cargar el componente
+    * 
+    * Comprueba si el usuario autenticado es administrador y actualiza el estado
+    * del usuario con el rol de administrador
+    * 
+    * Comprueba si el usuario autenticado está inactivo y cierra la sesión
+    */
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -55,6 +70,11 @@ function GestionarCarta() {
         return () => unsubscribe();
     }, [auth]);
 
+    /*
+    * Obtiene los datos de la carta de la base de datos de Firebase
+    * y actualiza el estado de la carta con los datos obtenidos
+    * al cargar el componente
+    */
     async function obtenerCarta() {
         const db = getFirestore();
         const data = await getDocs(collection(db, "carta"));
@@ -73,11 +93,29 @@ function GestionarCarta() {
         obtenerCarta();
     }, []);
 
+    /*
+    * Elimina un producto de la carta
+    *
+    * @param {string} id - El id del producto a eliminar
+    * @param {string} categoria - La categoría del producto a eliminar
+    * 
+    * @returns {Promise} - Devuelve una promesa con la operación
+    * de eliminar un producto de la carta
+    */
     async function eliminarProductoDeCarta(id, categoria) {
         await deleteDoc(doc(db, "carta", categoria, "productos", id));
         obtenerCarta();
     }
 
+    /*
+    * Agrega un producto a la carta
+    *
+    * @param {Event} e - El evento del botón de añadir producto
+    * a la carta
+    * 
+    * @returns {Promise} - Devuelve una promesa con la operación
+    * de añadir un producto a la carta
+    */
     async function agregarProductoACarta(e) {
         e.preventDefault();
         if (categoriaElegida === '') {
@@ -89,6 +127,15 @@ function GestionarCarta() {
         obtenerCarta();
     }
 
+    /*
+    * Agrega una nueva categoría a la carta
+    *
+    * @param {Event} e - El evento del botón de añadir categoría
+    * a la carta
+    *   
+    * @returns {Promise} - Devuelve una promesa con la operación
+    * de añadir una nueva categoría a la carta
+    */
     async function agregarNuevaCategoria(e) {
         e.preventDefault();
         await addDoc(collection(db, "carta"), { categoria: nuevaCategoria });
@@ -96,16 +143,37 @@ function GestionarCarta() {
         obtenerCarta();
     }
 
+    /*
+    * Edita un producto de la carta
+    *
+    * @param {string} id - El id del producto a editar
+    * @param {Object} producto - El producto a editar
+    */
     function editarProducto(id, producto) {
         setEsVisibleFormEditar(!esVisibleFormEditar);
         setEditingProduct(producto);
     }
 
+    /*
+    * Edita una categoría de la carta
+    *
+    * @param {string} id - El id de la categoría a editar
+    * @param {string} categoria - La categoría a editar
+    */
     function editarCategoria(id, categoria) {
         setCategoriaEditing(id);
         setCategoria(categoria);
     }
 
+    /*
+    * Guarda los cambios del producto editado
+    *
+    * @param {Event} e - El evento del botón de guardar cambios
+    * del producto editado
+    * 
+    * @returns {Promise} - Devuelve una promesa con la operación
+    * de guardar los cambios del producto editado
+    */
     async function saveEditarProducto(e) {
         e.preventDefault();
         if (editingProduct.imagen === '') {
@@ -117,6 +185,15 @@ function GestionarCarta() {
         setEsVisibleFormEditar(false);
     }
 
+    /*
+    * Guarda los cambios de la categoría editada
+    *
+    * @param {Event} e - El evento del botón de guardar cambios
+    * de la categoría editada
+    * 
+    * @returns {Promise} - Devuelve una promesa con la operación
+    * de guardar los cambios de la categoría editada
+    */
     async function saveEditarCategoria(e) {
         e.preventDefault();
         await updateDoc(doc(db, "carta", categoriaEditing), { categoria });
@@ -124,7 +201,14 @@ function GestionarCarta() {
         obtenerCarta();
     }
 
-    const handleImageUpload = async (e) => {
+    /*
+    * Sube una imagen a Firebase Storage
+    *
+    * @param {Event} e - El evento del input de subir imagen
+    * 
+    * @returns {Promise} - Devuelve una promesa con la operación
+    */
+    const subirImagen = async (e) => {
         const file = e.target.files[0];
         const storage = getStorage(app);
         const storageRef = ref(storage, 'images/' + file.name);
@@ -149,6 +233,11 @@ function GestionarCarta() {
         );
     }
 
+    /*
+    * Elimina una categoría de la carta
+    *
+    * @param {string} id - El id de la categoría a eliminar
+    */
     async function eliminarCategoria(id) {
         await deleteDoc(doc(db, "carta", id));
         obtenerCarta();
@@ -215,7 +304,7 @@ function GestionarCarta() {
                                         </label>
                                         <label>
                                             Imagen:
-                                            <input type="file" onChange={handleImageUpload} />
+                                            <input type="file" onChange={subirImagen} />
                                         </label>
                                         <button className='button1' type="submit">Crear producto</button>
                                     </form>
@@ -260,7 +349,7 @@ function GestionarCarta() {
                                                                             <textarea type="text" value={editingProduct.ingredientes} onChange={(e) => setEditingProduct({ ...editingProduct, ingredientes: e.target.value })} />
                                                                         </label>
                                                                         <label>Imagen:
-                                                                            <input type="file" onChange={handleImageUpload} />
+                                                                            <input type="file" onChange={subirImagen} />
                                                                         </label>
                                                                         <button type="submit" className='button1'>Guardar cambios</button>
                                                                     </form>

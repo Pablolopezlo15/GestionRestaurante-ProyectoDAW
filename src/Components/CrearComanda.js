@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getFirestore ,collection, getDocs, addDoc } from 'firebase/firestore';
 import app from '../firebase';
-import { set } from 'firebase/database';
 
 
 function CrearComanda({ idMesa, numeroMesa }) {
@@ -12,8 +11,13 @@ function CrearComanda({ idMesa, numeroMesa }) {
     const [observaciones, setObservaciones] = useState('');
     const db = getFirestore();
 
-
-
+    /*
+    * Obtiene los datos de la carta de la base de datos de Firebase
+    * y actualiza el estado de la carta con los datos obtenidos
+    *   
+    * Muestra la carta con los datos obtenidos de la base de datos
+    * de Firebase
+    */
     useEffect(() => {
         const obtenerCarta = async () => {
             const snapshot = await getDocs(collection(db, 'carta'));
@@ -31,6 +35,11 @@ function CrearComanda({ idMesa, numeroMesa }) {
         obtenerCarta();
     }, []);
 
+    /*
+    * Agrega un producto a la comanda
+    *
+    * @param {Object} producto - El producto a agregar a la comanda
+    */
     function agregarProducto(producto) {
         const productoExistente = comanda.find(p => p.id === producto.id);
 
@@ -42,6 +51,12 @@ function CrearComanda({ idMesa, numeroMesa }) {
         }
     }
 
+    /*
+    * Disminuye la cantidad de un producto en la comanda
+    *
+    * @param {Object} producto - El producto a disminuir la cantidad
+    * en la comanda
+    */
     function disminuirCantidad(producto) {
         const productoExistente = comanda.find(p => p.id === producto.id);
 
@@ -53,6 +68,9 @@ function CrearComanda({ idMesa, numeroMesa }) {
         }
     }
 
+    /*
+    * Envia la comanda a la base de datos de Firebase
+    */
     async function enviarComanda() {
         const comandaData = {
             productos: comanda,

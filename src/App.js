@@ -6,6 +6,8 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 
 function App() {
+
+    // Slider
     let currentSlide = useRef(1);
 
     function changeSlide(n) {
@@ -23,6 +25,7 @@ function App() {
         showSlide(currentSlide.current);
     }, []);
 
+    // Mapa
     const customIcon = new L.Icon({
         iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-red.png',
         shadowUrl: 'https://leafletjs.com/examples/custom-icons/leaf-shadow.png',

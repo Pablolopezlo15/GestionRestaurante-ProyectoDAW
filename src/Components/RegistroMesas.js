@@ -51,6 +51,9 @@ function RegistroMesas() {
         return () => unsubscribe();
     }, [auth]);
 
+    /*
+    * Obtiene el registro de mesas de un día concreto
+    */
     function obtenerRegistroMesas(dia, numero) {
         setLoading(true);
     
@@ -69,6 +72,9 @@ function RegistroMesas() {
         return unsubscribe;
     }
 
+    /*
+    * Calcula la cuenta de una mesa
+    */
     function calcularCuenta(mesa, dia, horaApertura, comandasPendientes, usuario) {
         console.log(comandasPendientes)
         setPdfDocument(<PDF mesaActual={mesa} dia={dia} horaApertura={horaApertura} comandasPendientes={comandasPendientes} usuario={usuario} />);

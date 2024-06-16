@@ -23,7 +23,9 @@ const InicioSesion = () => {
 
     const db = getFirestore(app);
 
-
+    /*
+    * Obtiene los usuarios al cargar el componente
+    */
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
@@ -36,6 +38,10 @@ const InicioSesion = () => {
 
     const navigate = useNavigate();
 
+    /*
+    * Obtiene los usuarios de la base de datos de Firebase
+    * y actualiza el estado de los usuarios con los datos obtenidos
+    */
     function obtenerUsuarios(currentUser) {
         const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
             const users = [];
@@ -48,13 +54,17 @@ const InicioSesion = () => {
 
     }
 
-    // Función para validar el correo electrónico
-    const validarEmail = (email) => {
+    /*
+    * Valida el formato del correo electrónico
+    */
+    function validarEmail(email) {
         return /\S+@\S+\.\S+/.test(email);
-    };
+    }
 
 
-
+    /*
+    * Inicia sesión con correo electrónico y contraseña
+    */
     async function iniciarSesionEmail(e) {
         e.preventDefault();
         setErrorValidacion('');
@@ -75,7 +85,9 @@ const InicioSesion = () => {
             const user = userCredential.user;
             console.log(user.emailVerified);
                 
-        
+            // Busca en los usuarios el usuario con el correo electrónico del usuario autenticado
+            // y comprueba si el usuario está activo
+            // Si el usuario está inactivo, se muestra un mensaje de error y se cierra la sesión
             const usuario = usuarios.find(usuario => usuario.correo === user.email);
             if (usuario.estado === 'inactivo') {
                 setInactivo(true);
@@ -83,6 +95,8 @@ const InicioSesion = () => {
                 return;
             }
 
+            // Si el correo electrónico no ha sido verificado, se envía un correo de verificación
+            // y se cierra la sesión
             if (!user.emailVerified) {
                 setEmailVerified(false);
                 try {
@@ -106,6 +120,9 @@ const InicioSesion = () => {
         }
     }
 
+    /*
+    * Cierra la sesión del usuario autenticado
+    */
     function cerrarSesion() {
         signOut(auth).then(() => {
             console.log("Sesión cerrada y estado actualizado");
@@ -116,6 +133,9 @@ const InicioSesion = () => {
 
     }
 
+    /*
+    * Envía un correo de recuperación de contraseña al correo electrónico especificado
+    */
     function emailRecuperacionContraseña(e) {
         e.preventDefault();
         sendPasswordResetEmail(auth, email)

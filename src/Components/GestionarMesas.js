@@ -20,6 +20,10 @@ function GestionarMesas() {
     const db = getFirestore();
     const auth = getAuth();
 
+    /*
+    * Comprueba si el usuario autenticado es administrador y actualiza el estado
+    * del usuario con el rol de administrador
+    */
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));
         usersSnapshot.forEach((doc) => {
@@ -29,6 +33,10 @@ function GestionarMesas() {
         });
     }
 
+    /*
+    * Comprueba si el usuario autenticado es administrador y actualiza el estado
+    * del usuario con el rol de administrador al cargar el componente
+    */
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -53,6 +61,11 @@ function GestionarMesas() {
         return () => unsubscribe();
     }, [auth]);
 
+    /*
+    * Obtiene las mesas de la base de datos de Firebase
+    * y actualiza el estado de las mesas con los datos obtenidos
+    * al cargar el componente
+    */
     useEffect(() => {
 
         const unsubscribe = onSnapshot(collection(db, 'mesas'), (snapshot) => {
@@ -63,6 +76,10 @@ function GestionarMesas() {
         return () => unsubscribe();
     }, [db]);
 
+    /*
+    * Obtiene las mesas de la base de datos de Firebase
+    * y actualiza el estado de las mesas con los datos obtenidos
+    */
     async function obtenerMesas() {
 
         const snapshot = await getDocs(collection(db, 'mesas'));
@@ -70,6 +87,13 @@ function GestionarMesas() {
         setMesas(mesasData);
     }
 
+    /*
+    * Elimina la mesa con el id especificado
+    *
+    * @param {string} mesaId - El id de la mesa a eliminar
+    * @returns {Promise} - Devuelve una promesa con el resultado de la eliminación
+    * de la mesa
+    */
     async function borrarMesa(mesaId) {
         try {
             await deleteDoc(doc(db, 'mesas', mesaId));
@@ -79,7 +103,14 @@ function GestionarMesas() {
         }
     }
 
-    const CrearNuevaMesa = async (e) => {
+    /*
+    * Crea una nueva mesa con la capacidad especificada
+    *
+    * @param {Object} e - Evento del formulario
+    * @returns {Promise} - Devuelve una promesa con el resultado de la creación
+    * de la mesa
+    */
+    async function CrearNuevaMesa(e) {
         const numero = mesas.length > 0 ? Math.max(...mesas.map(mesa => mesa.numero)) + 1 : 1;
     
         e.preventDefault();
@@ -95,12 +126,26 @@ function GestionarMesas() {
         console.log("Document written with ID: ", docRef.id);
     }
 
-    const handleEdit = (mesa) => {
+    /*
+    * Actualiza la capacidad de la mesa con el id especificado
+    *
+    * @param {Object} mesa - La mesa a editar
+    * @returns {Promise} - Devuelve una promesa con el resultado de la actualización
+    * de la mesa
+    */
+    function handleEdit(mesa) {
         setEditingId(mesa.id);
         setEditCapacidad(mesa.capacidad);
     }
 
-    const handleSave = async (id) => {
+    /*
+    * Actualiza la capacidad de la mesa con el id especificado
+    *
+    * @param {string} id - El id de la mesa a editar
+    * @returns {Promise} - Devuelve una promesa con el resultado de la actualización
+    * de la mesa
+    */
+    async function handleSave(id) {
         try {
             await updateDoc(doc(db, 'mesas', id), { capacidad: editCapacidad });
             setEditingId(null);

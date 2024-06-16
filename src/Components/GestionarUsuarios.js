@@ -13,6 +13,10 @@ function GestionarUsuarios() {
     const db = getFirestore();
     const auth = getAuth();
 
+    /*
+    * Comprueba si el usuario autenticado es administrador y actualiza el estado
+    * del usuario con el rol de administrador
+    */
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));
         usersSnapshot.forEach((doc) => {
@@ -22,6 +26,14 @@ function GestionarUsuarios() {
         });
     }
 
+    /*
+    * Comprueba si el usuario autenticado es administrador y actualiza el estado
+    * del usuario con el rol de administrador al cargar el componente
+    *   
+    * Obtiene los usuarios de la base de datos de Firebase
+    * y actualiza el estado de los usuarios con los datos obtenidos
+    * al cargar el componente
+    */
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -46,6 +58,11 @@ function GestionarUsuarios() {
         return () => unsubscribe();
     }, [auth]);
 
+    /*
+    * Obtiene los usuarios de la base de datos de Firebase
+    * y actualiza el estado de los usuarios con los datos obtenidos
+    * al cargar el componente
+    */
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
             const usuariosData = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
@@ -55,12 +72,25 @@ function GestionarUsuarios() {
         return () => unsubscribe();
     }, [db]);
 
+    /*
+    * Obtiene los usuarios de la base de datos de Firebase
+    * y actualiza el estado de los usuarios con los datos obtenidos
+    */
     async function obtenerUsuarios() {
         const snapshot = await getDocs(collection(db, 'users'));
         const usuariosData = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         setUsuarios(usuariosData);
     }
 
+    /*
+    * Cambia el rol del usuario con el id especificado
+    * al rol especificado
+    *   
+    * @param {string} id - El id del usuario
+    * @param {string} newRole - El nuevo rol del usuario
+    * @returns {Promise} - Una promesa con la actualización del rol del usuario
+    * en la base de datos
+    */
     async function cambiarRol(id, newRole) {
         const user = auth.currentUser;
         if (user && user.uid === id) {
@@ -74,6 +104,15 @@ function GestionarUsuarios() {
         await updateDoc(userRef, { rol: newRole });
     }
 
+    /*
+    * Cambia el estado del usuario con el id especificado
+    * al estado especificado
+    * 
+    * @param {string} id - El id del usuario
+    * @param {string} newState - El nuevo estado del usuario
+    * @returns {Promise} - Una promesa con la actualización del estado del usuario
+    * en la base de datos
+    */
     async function cambiarEstado(id, newState) {
         const user = auth.currentUser;
     

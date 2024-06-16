@@ -20,7 +20,12 @@ function Registro() {
     const [correoValido, setCorreoValido] = useState(null);
     const [contraseñaValida, setContraseñaValida] = useState(null);
 
-
+    /*
+    * Comprueba si el usuario autenticado es administrador y actualiza el estado
+    * del usuario con el rol de administrador
+    * @param {Object} user - Usuario autenticado
+    * @returns {Boolean} - Devuelve true si el usuario es administrador
+    */
     async function comprobarRol(user) {
         const usersSnapshot = await getDocs(collection(db, "users"));
         usersSnapshot.forEach((doc) => {
@@ -30,27 +35,44 @@ function Registro() {
         });
     }
 
-    // Funciones de validación actualizadas para actualizar los estados
-    const validarNombre = (nombre) => {
+    /*
+    * Valida el nombre del usuario
+    * @param {String} nombre - Nombre del usuario
+    * @returns {Boolean} - Devuelve true si el nombre es válido
+    */
+    function validarNombre(nombre) {
         const esValido = /^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(nombre);
         setNombreValido(esValido);
         return esValido;
-    };
-
-    const validarEmail = (email) => {
+    }
+    /*
+    * Valida el correo electrónico
+    * @param {String} email - Correo electrónico
+    * @returns {Boolean} - Devuelve true si el correo es válido
+    */
+    function validarEmail(email) {
         const esValido = /\S+@\S+\.\S+/.test(email);
         setCorreoValido(esValido);
         return esValido;
-    };
-
-    const validarPassword = (password) => {
+    }
+    /*
+    * Valida la contraseña
+    * @param {String} password - Contraseña
+    * @returns {Boolean} - Devuelve true si la contraseña es válida
+    */
+    function validarPassword(password) {
         const longitudValida = password.length >= 6;
         const contieneNumerosYLetras = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(password);
         const esValido = longitudValida && contieneNumerosYLetras;
         setContraseñaValida(esValido);
         return esValido;
-    };
+    }
 
+    /*
+    * Registra un usuario con correo electrónico y contraseña
+    * @param {Event} e - Evento del formulario
+    * @returns {Promise} - Devuelve una promesa con el resultado del registro
+    */
     function registro(e) {
         setLoading(true);
         setErrorValidacion('');
