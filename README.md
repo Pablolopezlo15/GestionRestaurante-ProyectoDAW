@@ -38,7 +38,7 @@ Instala dependencias
 ```bash
   npm install
 ```
--Crea el archivo firebase.js en /src y configura con tus credenciales
+-Crea el archivo firebase.js en /src y configura con tus credenciales (pantilla en firebase-ejemplo.js)
 
 Inicia el server
 
